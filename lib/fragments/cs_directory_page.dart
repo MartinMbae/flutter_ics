@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_awesome_alert_box/flutter_awesome_alert_box.dart';
 import 'package:flutter_ics/homepage/cs_list_view.dart';
+import 'package:flutter_ics/load_cs_directories.dart';
 import 'package:flutter_ics/models/cs_directory.dart';
 import 'package:flutter_ics/utils/app_colors.dart';
 import 'package:flutter_ics/utils/constants.dart';
@@ -107,39 +108,7 @@ class _CsDirectoryPageState extends State<CsDirectoryPage> with TickerProviderSt
                           ),
                         ];
                       },
-                      body: Container(
-                        child: FutureBuilder(
-                          future: fetchDirectories(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              List<dynamic> eventsList = snapshot.data;
-                              if (eventsList.length == 0) {
-                                return Text("No CS Directories found at the moment.",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(color: Colors.red),
-                                );
-                              } else {
-                                return ListView.separated(
-                                  shrinkWrap: true,
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  itemCount: eventsList.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    animationController.forward();
-                                    return CsListView(
-                                      csData: CsDirectory.fromJson(eventsList[index]),
-                                    );
-                                  },
-                                  separatorBuilder: (BuildContext context, int index) {
-                                    return SizedBox(height: 10,);
-                                  },
-                                );
-                              }
-                            } else {
-                              return Center(child: CircularProgressIndicator());
-                            }
-                          },
-                        ),
-                      ),
+                      body: LoadCsDirectories(),
                     ),
                   ),
                 ],

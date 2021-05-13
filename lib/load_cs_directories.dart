@@ -1,19 +1,21 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_ics/homepage/cs_list_view.dart';
+import 'package:flutter_ics/models/cs_directory.dart';
 import 'package:flutter_ics/models/news.dart';
 import 'package:flutter_ics/news_single.dart';
 import 'package:flutter_ics/utils/app_colors.dart';
 import 'package:flutter_ics/utils/constants.dart';
 import 'package:http/http.dart' as http;
 
-class LoadIcsNews extends StatefulWidget {
+class LoadCsDirectories extends StatefulWidget {
   @override
-  _LoadIcsNewsState createState() => _LoadIcsNewsState();
+  _LoadCsDirectoriesState createState() => _LoadCsDirectoriesState();
 }
 
-class _LoadIcsNewsState extends State<LoadIcsNews> {
-  List<dynamic> initialNews;
+class _LoadCsDirectoriesState extends State<LoadCsDirectories> {
+  List<dynamic> initialCsList;
   var scrollController = ScrollController();
   bool updating = false;
   
@@ -25,7 +27,7 @@ class _LoadIcsNewsState extends State<LoadIcsNews> {
 
 
   getNews() async {
-    initialNews = await NewsApiHelper().fetchNews();
+    initialCsList = await CsDirectoryApiHelper().fetchCsList();
     setState(() {});
   }
 
@@ -35,9 +37,9 @@ class _LoadIcsNewsState extends State<LoadIcsNews> {
     });
     var scrollpositin = scrollController.position;
     if (scrollpositin.pixels == scrollpositin.maxScrollExtent) {
-      var newapi = NewsApiHelper().getApi(initialNews.length);
-      List<dynamic> newIcsNews = await  NewsApiHelper().fetchNews(newapi);
-      initialNews.addAll(newIcsNews);
+      var newapi = CsDirectoryApiHelper().getApi(initialCsList.length);
+      List<dynamic> newCsList = await  CsDirectoryApiHelper().fetchCsList(newapi);
+      initialCsList.addAll(newCsList);
     }
     setState(() {
       updating = false;
@@ -47,35 +49,15 @@ class _LoadIcsNewsState extends State<LoadIcsNews> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
-            child: Text(
-              'News',
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-                letterSpacing: 0.27,
-                color: darkerText,
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          getNewsBody()
-        ],
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: getCsDirectoryBody(),
       ),
     );
   }
 
-  getNewsBody() {
-    if (initialNews == null) return Center(child: CircularProgressIndicator());
+  getCsDirectoryBody() {
+    if (initialCsList == null) return Center(child: CircularProgressIndicator());
     return NotificationListener<ScrollNotification>(
       onNotification: (noti) {
         if (noti is ScrollEndNotification) {
@@ -92,12 +74,11 @@ class _LoadIcsNewsState extends State<LoadIcsNews> {
                 controller: scrollController,
                 physics: BouncingScrollPhysics(),
                 itemBuilder: (c, i) {
-                  return  SingleNew(
-                    callback: (){},
-                    icsNewsItem:  IcsNewsItem.fromJson(initialNews[i]),
+                  return  CsListView(
+                    csData: CsDirectory.fromJson(initialCsList[i]),
                   );
                 },
-                itemCount: initialNews.length,
+                itemCount: initialCsList.length,
               ),
             ),
             if (updating) CircularProgressIndicator()
@@ -108,24 +89,24 @@ class _LoadIcsNewsState extends State<LoadIcsNews> {
   }
 }
 
-class NewsApiHelper {
-    Future<List<dynamic>> fetchNews([String url]) async {
+class CsDirectoryApiHelper {
+    Future<List<dynamic>> fetchCsList([String url]) async {
       print('Parsed Url is $url');
-      var initialUrl = Constants.baseUrl + "news/?start=0&limit=5";
+      var initialUrl = Constants.baseUrl + "users/?start=0&limit=5";
       print('initial URL is $initialUrl');
     var response = await http.get(Uri.parse(url ?? initialUrl));
     if (response == null) {
-      throw new Exception('Error fetching news');
+      throw new Exception('Error fetching CS Directories');
     }
     if (response.statusCode != 200) {
-      throw new Exception('Error fetching news');
+      throw new Exception('Error fetching CS Directories');
     }
     List<dynamic> events = jsonDecode(response.body);
     return events;
   }
 
   getApi(int start) {
-    final mainUrl = Constants.baseUrl + "news/?start=";
+    final mainUrl = Constants.baseUrl + "users/?start=";
     return mainUrl + start.toString() + "&limit=5";
   }
 }

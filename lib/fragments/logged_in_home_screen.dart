@@ -67,7 +67,10 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
         body: Column(
           children: <Widget>[
             SizedBox(
-              height: MediaQuery.of(context).padding.top,
+              height: MediaQuery
+                  .of(context)
+                  .padding
+                  .top,
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -128,7 +131,7 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
                                 decoration: BoxDecoration(
                                   color: Colors.purple.withOpacity(0.5),
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(4.0)),
+                                  BorderRadius.all(Radius.circular(4.0)),
                                 ),
                               ),
                               Padding(
@@ -153,9 +156,9 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+                                      CrossAxisAlignment.end,
                                       children: <Widget>[
                                         SizedBox(
                                           width: 28,
@@ -170,22 +173,22 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
                                               left: 4, bottom: 3),
                                           child: FutureBuilder(
                                             future: countMyEvents(),
-                                            builder: (context,snapshot){
-                                              if(snapshot.hasData){
+                                            builder: (context, snapshot) {
+                                              if (snapshot.hasData) {
                                                 return Text(
                                                   "${snapshot.data}",
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.w600,
                                                     fontSize: 16,
-                                                    color:  Color(0xFF17262A),
+                                                    color: Color(0xFF17262A),
                                                   ),
                                                 );
-                                              }else{
+                                              } else {
                                                 return CircularProgressIndicator();
                                               }
                                             },
-                                          ) ,
+                                          ),
                                         ),
                                       ],
                                     )
@@ -205,7 +208,7 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
                                 decoration: BoxDecoration(
                                   color: Colors.red.withOpacity(0.5),
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(4.0)),
+                                  BorderRadius.all(Radius.circular(4.0)),
                                 ),
                               ),
                               Padding(
@@ -231,9 +234,9 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+                                      CrossAxisAlignment.end,
                                       children: <Widget>[
                                         SizedBox(
                                           width: 28,
@@ -252,7 +255,7 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
                                             style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 16,
-                                              color:  Color(0xFF17262A),
+                                              color: Color(0xFF17262A),
                                             ),
                                           ),
                                         ),
@@ -298,11 +301,11 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 16,
-                                      color:  Color(0xFF17262A),
+                                      color: Color(0xFF17262A),
                                     ),
                                   ),
                                   Text(
-                                    'CS Points',
+                                    'CPD Points',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -366,8 +369,7 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
         ),
         IcsEventsListView(
           myEvents: false,
-          callBack: () {
-          },
+          callBack: () {},
         ),
       ],
     );
@@ -396,8 +398,7 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
         ),
         IcsEventsListView(
           myEvents: true,
-          callBack: () {
-          },
+          callBack: () {},
         ),
       ],
     );
@@ -405,9 +406,10 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
 
   Future<int> countMyEvents() async {
     String id = await getUserId();
-    String  url = Constants.baseUrl + "events/bookedevents/$id";
+    String url = Constants.baseUrl + "events/bookedevents/$id";
 
-    var response =  await http.get(Uri.parse(url)).timeout(Duration(seconds: 30));
+    var response = await http.get(Uri.parse(url)).timeout(
+        Duration(seconds: 30));
 
     if (response == null) {
       throw new Exception('Error fetching events');
@@ -422,13 +424,14 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
 
   Future<void> countMyPoints() async {
     String id = await getUserId();
-    String  url = Constants.baseUrl + "users/points/$id";
+    String url = Constants.baseUrl + "users/points/$id";
 
     print('counting my points');
     print('................');
     print(url);
 
-    var response =  await http.get(Uri.parse(url)).timeout(Duration(seconds: 30));
+    var response = await http.get(Uri.parse(url)).timeout(
+        Duration(seconds: 30));
 
     if (response == null) {
       throw new Exception('Error fetching points');
@@ -439,12 +442,13 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
     String points = response.body;
     print(points);
 
-    if(points.trim().isEmpty){
-
+    if (points
+        .trim()
+        .isEmpty) {
       setState(() {
         userPoints = '-';
       });
-    }else{
+    } else {
       setState(() {
         userPoints = points;
       });
@@ -490,24 +494,27 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
           Container(
             width: 60,
             height: 60,
-            child:CachedNetworkImage(
+            child: CachedNetworkImage(
               imageUrl: current_imageUrl,
-              errorWidget: (context, url, error) => Container(
-    decoration: BoxDecoration(
-    image: DecorationImage(
-    image: AssetImage('assets/images/profile-placeholder.png'),
-    fit: BoxFit.cover,),
-    borderRadius: BorderRadius.all(Radius.circular(12.0)),
-    ),
-    ),
-              imageBuilder: (context, imageProvider) => Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: imageProvider,
-                      fit: BoxFit.cover,),
-                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                ),
-              ),
+              errorWidget: (context, url, error) =>
+                  Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(
+                            'assets/images/profile-placeholder.png'),
+                        fit: BoxFit.cover,),
+                      borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                    ),
+                  ),
+              imageBuilder: (context, imageProvider) =>
+                  Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,),
+                      borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                    ),
+                  ),
               progressIndicatorBuilder: (context, url, downloadProgress) =>
                   CircularProgressIndicator(value: downloadProgress.progress),
             ),
