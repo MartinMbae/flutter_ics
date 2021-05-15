@@ -4,6 +4,9 @@ import 'dart:ui';
 import 'package:ars_progress_dialog/ars_progress_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_awesome_alert_box/flutter_awesome_alert_box.dart';
+import 'package:flutter_ics/fragments/logged_in_home_screen.dart';
+import 'package:flutter_ics/navigation_home_screen.dart';
+import 'package:flutter_ics/utils/custom_methods.dart';
 import 'package:http/http.dart';
 import 'package:flutter_ics/utils/app_colors.dart';
 import 'package:flutter_ics/utils/constants.dart';
@@ -118,17 +121,17 @@ class _BookEventState extends State<BookEvent> {
                         onPressed: () async {
                           if (formKey.currentState.validate()) {
                             String userId = await getUserId();
-                            String groupId = "";
+                            String groupId = "0";
                             String fullName = await getName();
                             String organization  = organizationController.text;
-                            String city = await getTown();
-                            String state = "";
-                            String country = "1";
-                            String zip = "";
+                            String city = "0";
+                            String state = "0";
+                            String country = "0";
+                            String zip = "0";
                             String phone = await getPhoneNumber();
                             String email = await getEmail();
 
-                            bookEvent(widget.eventId,userId, groupId,fullName, "", organization, city, state,country, zip, phone,email,context);
+                            bookEvent(widget.eventId,userId, groupId,fullName, organization, city, state,country, zip, phone,email,context);
 
                           }
                         },
@@ -148,8 +151,7 @@ class _BookEventState extends State<BookEvent> {
       String event_id,
       String user_id,
       String group_id,
-      String first_name,
-      String last_name,
+      String fullName,
       String organization,
       String city,
       String state,
@@ -162,26 +164,35 @@ class _BookEventState extends State<BookEvent> {
 
     String url = Constants.baseUrl + 'events/booking';
 
+    print(url);
+
+
+    var map = <String, String>{
+      'event_id' : event_id,
+      'user_id': user_id,
+      'group_id': group_id,
+      'first_name': fullName.split(' ')[0],
+      'last_name': fullName.split(' ')[1],
+      'organization': organization,
+      'city': city,
+      'state': state,
+      'country': country,
+      'zip': zip,
+      'phone': "$phone",
+      'email': email,
+    };
+    print(map);
 
     Response response;
     try {
-      response = await http.post(Uri.parse(url), body: {
-        'event_id': event_id,
-        'user_id': user_id,
-        'group_id': group_id,
-        'first_name': first_name,
-        'last_name': last_name,
-        'organization': organization,
-        'city': city,
-        'state': state,
-        'country': country,
-        'zip': zip,
-        'phone': "$phone",
-        'email': email,
-      }).timeout(Duration(seconds: 20), onTimeout: () {
+      response = await http.post(Uri.parse(url), body:
+       map
+
+      ).timeout(Duration(seconds: 20), onTimeout: () {
         return null;
       });
-    } on Exception {
+    }catch(e) {
+      print("Erorrr is ${e.toString()}");
       response = null;
     }
 
@@ -204,7 +215,9 @@ class _BookEventState extends State<BookEvent> {
           bool success = responseMessage['status'];
           String message = responseMessage['message'];
           if (success) {
-            Navigator.pop(context);
+            navigateToPageRemoveHistory(context,  NavigationHomeScreen(
+              loggedIn: true,
+            ));
             SuccessAlertBox(
                 context: context, messageText: message, title: "Success");
           } else {

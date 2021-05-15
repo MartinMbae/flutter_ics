@@ -1,11 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ics/homepage/cs_list_view.dart';
 import 'package:flutter_ics/models/cs_directory.dart';
-import 'package:flutter_ics/models/news.dart';
-import 'package:flutter_ics/news_single.dart';
-import 'package:flutter_ics/utils/app_colors.dart';
 import 'package:flutter_ics/utils/constants.dart';
 import 'package:http/http.dart' as http;
 
@@ -67,18 +65,21 @@ class _LoadCsDirectoriesState extends State<LoadCsDirectories> {
       },
       child: Container(
         height: MediaQuery.of(context).size.height,
+        color: Colors.grey[300],
         child: Column(
           children: [
             Expanded(
-              child: ListView.builder(
+              child: ListView.separated(
                 controller: scrollController,
-                physics: BouncingScrollPhysics(),
+                // physics: BouncingScrollPhysics(),
                 itemBuilder: (c, i) {
                   return  CsListView(
                     csData: CsDirectory.fromJson(initialCsList[i]),
                   );
                 },
-                itemCount: initialCsList.length,
+                itemCount: initialCsList.length, separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(height: 10,);
+              },
               ),
             ),
             if (updating) CircularProgressIndicator()
@@ -91,9 +92,7 @@ class _LoadCsDirectoriesState extends State<LoadCsDirectories> {
 
 class CsDirectoryApiHelper {
     Future<List<dynamic>> fetchCsList([String url]) async {
-      print('Parsed Url is $url');
-      var initialUrl = Constants.baseUrl + "users/?start=0&limit=5";
-      print('initial URL is $initialUrl');
+      var initialUrl = Constants.baseUrl + "users/10/0";
     var response = await http.get(Uri.parse(url ?? initialUrl));
     if (response == null) {
       throw new Exception('Error fetching CS Directories');
@@ -106,8 +105,8 @@ class CsDirectoryApiHelper {
   }
 
   getApi(int start) {
-    final mainUrl = Constants.baseUrl + "users/?start=";
-    return mainUrl + start.toString() + "&limit=5";
+    final mainUrl = Constants.baseUrl + "users/10/";
+    return mainUrl + start.toString();
   }
 }
 

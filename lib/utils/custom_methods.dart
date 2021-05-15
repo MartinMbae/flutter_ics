@@ -34,12 +34,17 @@ void showCustomDialog({
 
 String formatDate(String date) {
   DateTime dateTime = DateTime.parse(date);
-  DateFormat format = DateFormat('dd MMM yyyy');
+  DateFormat format = DateFormat('dd MMM yyyy hh:mm a');
   String formattedDate = format.format(dateTime);
   return formattedDate;
 }
 
 String formatCharges(String amount) {
   double am = double.parse(amount);
-  return am == 0 ? "Free" : "$am";
+  if (am == 0){
+    return "Free";
+  }else{
+    final formatter = new NumberFormat("#,###");
+    return "Ksh. ${formatter.format(am)}";
+  }
 }

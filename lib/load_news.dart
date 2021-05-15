@@ -89,8 +89,9 @@ class _LoadIcsNewsState extends State<LoadIcsNews> {
           children: [
             Expanded(
               child: ListView.builder(
+                shrinkWrap: true,
                 controller: scrollController,
-                physics: BouncingScrollPhysics(),
+                // physics: BouncingScrollPhysics(),
                 itemBuilder: (c, i) {
                   return  SingleNew(
                     callback: (){},
@@ -110,9 +111,7 @@ class _LoadIcsNewsState extends State<LoadIcsNews> {
 
 class NewsApiHelper {
     Future<List<dynamic>> fetchNews([String url]) async {
-      print('Parsed Url is $url');
-      var initialUrl = Constants.baseUrl + "news/?start=0&limit=5";
-      print('initial URL is $initialUrl');
+      var initialUrl = Constants.baseUrl + "news/10/0";
     var response = await http.get(Uri.parse(url ?? initialUrl));
     if (response == null) {
       throw new Exception('Error fetching news');
@@ -125,8 +124,8 @@ class NewsApiHelper {
   }
 
   getApi(int start) {
-    final mainUrl = Constants.baseUrl + "news/?start=";
-    return mainUrl + start.toString() + "&limit=5";
+    final mainUrl = Constants.baseUrl + "news/10/";
+    return mainUrl + start.toString() ;
   }
 }
 

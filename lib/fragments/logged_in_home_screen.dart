@@ -24,7 +24,6 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
   String current_username = "";
   String current_imageUrl = "";
 
-  String userPoints = '.';
 
   @override
   void initState() {
@@ -34,7 +33,6 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       getUsernameFromSharedPref();
-      countMyPoints();
     });
   }
 
@@ -295,14 +293,23 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  Text(
-                                    "$userPoints",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16,
-                                      color: Color(0xFF17262A),
-                                    ),
+                                  FutureBuilder(
+                                    future: countMyPoints(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return Text(
+                                          "${snapshot.data}",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 16,
+                                            color: Color(0xFF17262A),
+                                          ),
+                                        );
+                                      } else {
+                                        return CircularProgressIndicator();
+                                      }
+                                    },
                                   ),
                                   Text(
                                     'CPD Points',
@@ -422,17 +429,12 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
     return events.length;
   }
 
-  Future<void> countMyPoints() async {
+  Future<String> countMyPoints() async {
     String id = await getUserId();
     String url = Constants.baseUrl + "users/points/$id";
 
-    print('counting my points');
-    print('................');
-    print(url);
-
     var response = await http.get(Uri.parse(url)).timeout(
         Duration(seconds: 30));
-
     if (response == null) {
       throw new Exception('Error fetching points');
     }
@@ -440,19 +442,8 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
       throw new Exception('Error fetching points');
     }
     String points = response.body;
-    print(points);
-
-    if (points
-        .trim()
-        .isEmpty) {
-      setState(() {
-        userPoints = '-';
-      });
-    } else {
-      setState(() {
-        userPoints = points;
-      });
-    }
+    points = points.replaceAll(RegExp('"'), '');
+    return points;
   }
 
 
