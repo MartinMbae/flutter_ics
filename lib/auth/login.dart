@@ -4,6 +4,7 @@ import 'package:ars_progress_dialog/ars_progress_dialog.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_awesome_alert_box/flutter_awesome_alert_box.dart';
 import 'package:http/http.dart';
 import 'package:flutter_ics/auth/components/header.dart';
 import 'package:flutter_ics/auth/forgot_password.dart';
@@ -283,12 +284,12 @@ class _LoginPageState extends State<LoginPage> {
             loggedIn: true,
           ));
     } else {
-      showCustomDialog(
-          context: context,
-          message: responseAsJson['message'],
-          alertType: CoolAlertType.error,
-          confirmBtnText: "Ok",
-          confirmAction: () {});
+      DangerAlertBox(
+        context: context,
+        messageText: responseAsJson['message'],
+        title: 'Error!!'
+      );
+
     }
   }
 }

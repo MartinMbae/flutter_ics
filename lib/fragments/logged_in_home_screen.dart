@@ -4,6 +4,8 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_awesome_alert_box/flutter_awesome_alert_box.dart';
+import 'package:flutter_ics/cpd_points.dart';
+import 'package:flutter_ics/utils/custom_methods.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_ics/design_course/design_course_app_theme.dart';
 import 'package:flutter_ics/design_course/ics_events_list_view.dart';
@@ -268,79 +270,84 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 16),
-                    child: Center(
-                      child: Stack(
-                        overflow: Overflow.visible,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(100.0),
+                  GestureDetector(
+                    onTap: (){
+                      navigateToPage(context, CpdTabLayout());
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: Center(
+                        child: Stack(
+                          overflow: Overflow.visible,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(100.0),
+                                  ),
+                                  border: new Border.all(
+                                      width: 4,
+                                      color: Color(0xFF2633C5)
+                                          .withOpacity(0.2)),
                                 ),
-                                border: new Border.all(
-                                    width: 4,
-                                    color: Color(0xFF2633C5)
-                                        .withOpacity(0.2)),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  FutureBuilder(
-                                    future: countMyPoints(),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData) {
-                                        return Text(
-                                          "${snapshot.data}",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 16,
-                                            color: Color(0xFF17262A),
-                                          ),
-                                        );
-                                      } else {
-                                        return CircularProgressIndicator();
-                                      }
-                                    },
-                                  ),
-                                  Text(
-                                    'CPD Points',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                      letterSpacing: 0.0,
-                                      color:
-                                      Color(0xFF3A5160).withOpacity(0.5),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    FutureBuilder(
+                                      future: countMyPoints(),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          return Text(
+                                            "${snapshot.data}",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 16,
+                                              color: Color(0xFF17262A),
+                                            ),
+                                          );
+                                        } else {
+                                          return CircularProgressIndicator();
+                                        }
+                                      },
                                     ),
-                                  ),
-                                ],
+                                    Text(
+                                      'CPD Points',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                        letterSpacing: 0.0,
+                                        color:
+                                        Color(0xFF3A5160).withOpacity(0.5),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: CustomPaint(
-                              painter: CurvePainter(colors: [
-                                primaryColorLight,
-                                primaryColor,
-                                primaryColorDark
-                              ], angle: 120),
-                              child: SizedBox(
-                                width: 108,
-                                height: 108,
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: CustomPaint(
+                                painter: CurvePainter(colors: [
+                                  primaryColorLight,
+                                  primaryColor,
+                                  primaryColorDark
+                                ], angle: 120),
+                                child: SizedBox(
+                                  width: 108,
+                                  height: 108,
+                                ),
                               ),
-                            ),
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   )
@@ -432,7 +439,7 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
   Future<String> countMyPoints() async {
     String id = await getUserId();
     String url = Constants.baseUrl + "users/points/$id";
-
+    print(url);
     var response = await http.get(Uri.parse(url)).timeout(
         Duration(seconds: 30));
     if (response == null) {
@@ -442,7 +449,12 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
       throw new Exception('Error fetching points');
     }
     String points = response.body;
+
     points = points.replaceAll(RegExp('"'), '');
+
+    if(points.isEmpty){
+      points = '0';
+    }
     return points;
   }
 
