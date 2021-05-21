@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_ics/book_event_dialog.dart';
+import 'package:flutter_ics/design_course/event_info_screen.dart';
 import 'package:flutter_ics/event_row.dart';
 import 'package:flutter_ics/models/booked_event.dart';
 import 'package:flutter_ics/models/events.dart';
@@ -12,7 +12,6 @@ import 'package:flutter_ics/utils/custom_methods.dart';
 import 'package:flutter_ics/utils/shared_pref.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class IcsEventsListView extends StatefulWidget {
   const IcsEventsListView({Key key, this.callBack, @required this.myEvents})
@@ -29,7 +28,7 @@ class _IcsEventsListViewState extends State<IcsEventsListView> {
   var scrollController = ScrollController();
   bool updating = false;
 
-  var containerHeight = 200.0;
+  var containerHeight = 220.0;
 
   @override
   void initState() {
@@ -109,7 +108,6 @@ class _IcsEventsListViewState extends State<IcsEventsListView> {
                     itemCount: eventsList.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (BuildContext context, int index) {
-                      final int count = eventsList.length;
                       if (widget.myEvents) {
                         return IcsBookedEventHolder(
                           bookedEvent: BookedEvent.fromJson(eventsList[index]),
@@ -192,112 +190,97 @@ class IcsEventHolder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      splashColor: Colors.transparent,
-      onTap: () {
-        callback();
-      },
-      child: SizedBox(
-        width: 280,
-        child: Stack(
+    return SizedBox(
+      width: 280,
+      child: Container(
+        child: Row(
           children: <Widget>[
-            Container(
-              child: Row(
-                children: <Widget>[
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: primaryColorLight),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(16.0)),
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-                            child: Container(
-                              height: 200,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 16),
-                                    child: Text(
-                                      icsEvent.title,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                        letterSpacing: 0.27,
-                                        color: primaryColor,
-                                      ),
-                                    ),
-                                  ),
-                                  const Expanded(
-                                    child: SizedBox(),
-                                  ),
-                                  EventRow(
-                                      title: "Start Date",
-                                      subtitle:
-                                          formatDate(icsEvent.event_date)),
-                                  EventRow(
-                                      title: "End Date",
-                                      subtitle:
-                                          formatDate(icsEvent.event_date)),
-                                  EventRow(
-                                      title: "Capacity",
-                                      subtitle: icsEvent.event_capacity),
-                                  EventRow(
-                                      title: "Charges",
-                                      subtitle: formatCharges(
-                                          icsEvent.individual_price)),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      RaisedButton.icon(
-                                        onPressed: () {
-                                          showCupertinoModalBottomSheet(
-                                              context: context,
-                                              builder: (context) => BookEvent(
-                                                    eventId: icsEvent.id,
-                                                    eventPrice: formatCharges(
-                                                        icsEvent
-                                                            .individual_price),
-                                                    eventTitle: icsEvent.title,
-                                                  ));
-                                        },
-                                        icon: Icon(
-                                          Icons.bookmarks_outlined,
-                                          color: Colors.white,
-                                        ),
-                                        label: Text(
-                                          "Book this Event",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        color: primaryColor,
-                                      ),
-                                    ],
-                                  )
-                                ],
+            const SizedBox(
+              width: 8,
+            ),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                ),
+                child: Row(
+                  children: <Widget>[
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: 200,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16),
+                              child: Text(
+                                icsEvent.title,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  letterSpacing: 0.27,
+                                  color: Colors.black87,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            const Expanded(
+                              child: SizedBox(),
+                            ),
+                            EventRow(
+                                title: "Start Date",
+                                subtitle:
+                                    formatDate(icsEvent.event_date)),
+                            EventRow(
+                                title: "End Date",
+                                subtitle:
+                                    formatDate(icsEvent.event_date)),
+                            EventRow(
+                                title: "Capacity",
+                                subtitle: icsEvent.event_capacity),
+                            EventRow(
+                                title: "Charges",
+                                subtitle: formatCharges(
+                                    icsEvent.individual_price)),
+                            Divider(height: 1,),
+                            GestureDetector(
+                              onTap: (){
+                                navigateToPage(
+                                    context,
+                                    EventInfoScreen(
+                                      eventId: icsEvent.id,
+                                      eventPrice: formatCharges(icsEvent.individual_price),
+                                      eventTitle: icsEvent.title,
+                                      startDate: formatDate(icsEvent.event_date),
+                                      endDate: formatDate( icsEvent.event_end_date),
+                                    ));
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                    child: Text("More Info", style: TextStyle(color: primaryColor, fontWeight: FontWeight.w600),),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  )
-                ],
+                  ],
+                ),
               ),
-            ),
+            )
           ],
         ),
       ),
@@ -306,10 +289,7 @@ class IcsEventHolder extends StatelessWidget {
 }
 
 class IcsBookedEventHolder extends StatelessWidget {
-  const IcsBookedEventHolder(
-      {Key key,
-      this.bookedEvent,
-      this.callback})
+  const IcsBookedEventHolder({Key key, this.bookedEvent, this.callback})
       : super(key: key);
 
   final VoidCallback callback;
@@ -317,96 +297,79 @@ class IcsBookedEventHolder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      splashColor: Colors.transparent,
-      onTap: () {
-        callback();
-      },
-      child: SizedBox(
-        width: 280,
-        child: Stack(
-          children: <Widget>[
-            Container(
-              child: Row(
-                children: <Widget>[
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: primaryColorLight),
-                        borderRadius: const BorderRadius.all(
-                            Radius.circular(16.0)),
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-                            child: Container(
-                              child: Column(
-                                mainAxisAlignment:
-                                MainAxisAlignment.start,
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(
-                                    padding:
-                                    const EdgeInsets.only(top: 16),
-                                    child: Text(
-                                      bookedEvent.title,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                        letterSpacing: 0.27,
-                                        color: primaryColor,
-                                      ),
-                                    ),
+    return SizedBox(
+      width: 280,
+      child: Container(
+        child: Row(
+          children:[
+            const SizedBox(
+              width: 12,
+            ),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.black87),
+                  borderRadius:
+                      const BorderRadius.all(Radius.circular(16.0)),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Container(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(top: 16),
+                                child: Text(
+                                  bookedEvent.title,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                    letterSpacing: 0.27,
+                                    color: Colors.black87,
                                   ),
-                                  const Expanded(
-                                    child: SizedBox(),
-                                  ),
-                                  EventRow(
-                                      title: "Organization",
-                                      subtitle:
-                                      bookedEvent.organization),
-                                  EventRow(
-                                      title: "Event Date",
-                                      subtitle: formatDate(
-                                          bookedEvent.event_date)),
-                                  EventRow(
-                                      title: "Event End Date",
-                                      subtitle: formatDate(
-                                          bookedEvent.event_end_date)),
-                                  EventRow(
-                                      title: "Number of Registrants ",
-                                      subtitle: bookedEvent
-                                          .number_registrants),
-                                  EventRow(
-                                      title: "Payment Status",
-                                      subtitle:
-                                      bookedEvent.payment_status),
-                                  EventRow(
-                                      title: "Payment Date",
-                                      subtitle:
-                                      bookedEvent.payment_date),
-                                ],
+                                ),
                               ),
-                            ),
+                              Expanded(
+                                child: SizedBox(),
+                              ),
+                              EventRow(
+                                  title: "Organization",
+                                  subtitle: bookedEvent.organization),
+                              EventRow(
+                                  title: "Event Date",
+                                  subtitle:
+                                      formatDate(bookedEvent.event_date)),
+                              EventRow(
+                                  title: "Event End Date",
+                                  subtitle: formatDate(
+                                      bookedEvent.event_end_date)),
+                              EventRow(
+                                  title: "Number of Registrants ",
+                                  subtitle: bookedEvent.number_registrants),
+                              EventRow(
+                                  title: "Payment Status",
+                                  subtitle: bookedEvent.payment_status),
+                              EventRow(
+                                  title: "Payment Date",
+                                  subtitle: bookedEvent.payment_date),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  )
-                ],
+                  ],
+                ),
               ),
-            ),
+            )
           ],
         ),
       ),

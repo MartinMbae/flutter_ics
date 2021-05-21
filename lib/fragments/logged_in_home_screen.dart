@@ -1,19 +1,16 @@
 import 'dart:convert';
+import 'dart:math' as math;
 import 'dart:ui';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_awesome_alert_box/flutter_awesome_alert_box.dart';
 import 'package:flutter_ics/cpd_points.dart';
-import 'package:flutter_ics/utils/custom_methods.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter_ics/design_course/design_course_app_theme.dart';
 import 'package:flutter_ics/design_course/ics_events_list_view.dart';
 import 'package:flutter_ics/load_news.dart';
 import 'package:flutter_ics/utils/app_colors.dart';
 import 'package:flutter_ics/utils/constants.dart';
+import 'package:flutter_ics/utils/custom_methods.dart';
 import 'package:flutter_ics/utils/shared_pref.dart';
-import 'dart:math' as math;
+import 'package:http/http.dart' as http;
 
 class LoggedInHomePage extends StatefulWidget {
   @override
@@ -56,7 +53,6 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: DesignCourseAppTheme.nearlyWhite,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
@@ -65,7 +61,7 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
           elevation: 0,
         ),
         body: Column(
-          children: <Widget>[
+          children: [
             SizedBox(
               height: MediaQuery
                   .of(context)
@@ -80,8 +76,9 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
                     children: <Widget>[
                       getAppBarUI(),
                       getProfileDetails(),
-                      getMyBookedEvents(),
                       getEvents(),
+                      Divider(height: 5,),
+                      getMyBookedEvents(),
                       LoadIcsNews(),
                     ],
                   ),
@@ -366,7 +363,7 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
+          padding: const EdgeInsets.only(top: 12.0, left: 18, right: 16),
           child: Text(
             'Explore Events',
             textAlign: TextAlign.left,
@@ -374,12 +371,11 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
               fontWeight: FontWeight.w600,
               fontSize: 16,
               letterSpacing: 0.27,
-              color: DesignCourseAppTheme.darkerText,
             ),
           ),
         ),
         const SizedBox(
-          height: 16,
+          height: 12,
         ),
         IcsEventsListView(
           myEvents: false,
@@ -395,7 +391,7 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
+          padding: const EdgeInsets.only(top: 12.0, left: 18, right: 16),
           child: Text(
             'My Booked Events',
             textAlign: TextAlign.left,
@@ -403,12 +399,11 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
               fontWeight: FontWeight.w600,
               fontSize: 16,
               letterSpacing: 0.27,
-              color: DesignCourseAppTheme.darkerText,
             ),
           ),
         ),
         const SizedBox(
-          height: 16,
+          height: 8,
         ),
         IcsEventsListView(
           myEvents: true,
@@ -476,7 +471,6 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
                     fontWeight: FontWeight.w400,
                     fontSize: 14,
                     letterSpacing: 0.2,
-                    color: DesignCourseAppTheme.grey,
                   ),
                 ),
                 Text(
@@ -486,7 +480,6 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
                     fontWeight: FontWeight.bold,
                     fontSize: 22,
                     letterSpacing: 0.27,
-                    color: DesignCourseAppTheme.darkerText,
                   ),
                 ),
               ],

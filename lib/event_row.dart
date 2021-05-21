@@ -16,8 +16,8 @@ class EventRow extends StatelessWidget {
       child: RichText(
         text: TextSpan(
           children: <TextSpan>[
-            TextSpan(text: "$title : ", style: TextStyle(color: primaryColorDark, fontWeight: FontWeight.bold)),
-            TextSpan(text: "$subtitle", style: TextStyle(color: subtitleColor == null ? primaryColor : subtitleColor)),
+            TextSpan(text: "$title : ", style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold)),
+            TextSpan(text: "$subtitle", style: TextStyle(color: subtitleColor == null ? Colors.black87 : subtitleColor)),
           ],
         ),
       ),
