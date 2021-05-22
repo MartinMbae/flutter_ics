@@ -12,7 +12,7 @@ void main() async {
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
-  ]).then((_) {
+  ]).then((_) async {
     HttpOverrides.global = new MyHttpOverrides();
     runApp(MyApp());
   });

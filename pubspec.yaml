@@ -50,6 +50,10 @@ dependencies:
   modal_bottom_sheet: ^2.0.0
   fluttertoast: ^8.0.6
   infinite_scroll_pagination: ^3.0.1
+  pdf_viewer_jk: any
+  permission_handler: ^8.0.0+1
+  dio: ^4.0.0
+  progress_dialog: ^1.2.4
 
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_ics/utils/constants.dart';
 
 class CategoryDownload {
 
@@ -7,6 +8,7 @@ class CategoryDownload {
       file_alias,
       description,
       url_download,
+      cat_dir,
       title;
 
   CategoryDownload({
@@ -16,6 +18,7 @@ class CategoryDownload {
     @required this.description,
     @required this.url_download,
     @required this.title,
+    @required this.cat_dir,
   });
 
   static CategoryDownload fromJson(dynamic json) {
@@ -26,6 +29,11 @@ class CategoryDownload {
       description: json['description'],
       url_download: json['url_download'],
       title: json['title'],
+      cat_dir: json['cat_dir'],
     );
+  }
+
+  String getUrlLink(){
+    return Constants.baseUrlForFiles+ 'jdownloads/$cat_dir/$url_download';
   }
 }
