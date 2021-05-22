@@ -47,6 +47,11 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
     setState(() {
       current_username = username;
       current_imageUrl = imageUrl;
+
+      print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      print(current_imageUrl);
+      print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+
     });
   }
 

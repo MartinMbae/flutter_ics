@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,7 +38,6 @@ class _DownloadsCategoryPageState extends State<DownloadsCategoryPage> with Tick
   }
 
   AnimationController animationController;
-  final ScrollController _scrollController = ScrollController();
   bool multiple = true;
 
   @override
@@ -94,7 +94,38 @@ class _DownloadsCategoryPageState extends State<DownloadsCategoryPage> with Tick
                             DownloadsCategory category = DownloadsCategory.fromJson(eventsList[index]);
                             animationController.forward();
                             return ListTile(
+                              leading: Container(
+                                height: 60,
+                                width: 60,
+                                child: Card(
+                                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                                  child: GestureDetector(
+                                      child: Hero(
+                                        tag:"imageHero${category.id}",
+                                        child: CachedNetworkImage(
+                                          imageUrl: category.getCategoryImageLink(),
+                                          placeholder: (context, url) =>
+                                              Center(child: CircularProgressIndicator()),
+                                          errorWidget: (context, url, error) =>
+                                              Center(child: Icon(Icons.error)),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (_) {
+                                          return SingleImageScreen(
+                                              tag: "imageHero${category.id}",
+                                              imageUrl: category.getCategoryImageLink());
+                                        }));
+                                      }),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  elevation: 5,
+                                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                                ),
+                              ),
                               title: Text(category.title),
+                              subtitle: Text(''),
                               onTap: (){
                                 navigateToPage(context, ResourceCenterPage(downloadCategory: category,));
                               },
@@ -140,3 +171,43 @@ class ContestTabHeader extends SliverPersistentHeaderDelegate {
     return false;
   }
 }
+
+
+class SingleImageScreen extends StatelessWidget {
+  final imageUrl, tag;
+
+  const SingleImageScreen({Key key, @required this.imageUrl, this.tag})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: GestureDetector(
+        child: Container(
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height,
+          child: Hero(
+            tag: tag,
+            child: CachedNetworkImage(
+              imageUrl: imageUrl,
+              placeholder: (context, url) =>
+                  Center(child: CircularProgressIndicator()),
+              errorWidget: (context, url, error) =>
+                  Center(child: Icon(Icons.error)),
+            ),
+          ),
+        ),
+        onTap: () {
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+}
+

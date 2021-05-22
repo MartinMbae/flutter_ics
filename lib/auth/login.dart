@@ -220,9 +220,6 @@ class _LoginPageState extends State<LoginPage> {
         return null;
       });
     }catch(ex){
-      print(".....................................");
-      print(ex.toString());
-      print(".....................................");
       response = null;
     }
     _progressDialog.dismiss();

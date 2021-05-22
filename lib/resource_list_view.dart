@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutter_full_pdf_viewer/full_pdf_viewer_scaffold.dart';
 import 'package:flutter_ics/models/category_downloads.dart';
 import 'package:flutter_ics/pdf_file_view.dart';
 import 'package:flutter_ics/utils/app_colors.dart';
@@ -29,7 +29,6 @@ class ResourceListView extends StatefulWidget {
   final AnimationController animationController;
   final Animation<dynamic> animation;
 
-
   final Permission permission;
 
   @override
@@ -39,133 +38,125 @@ class ResourceListView extends StatefulWidget {
 class _ResourceListViewState extends State<ResourceListView> {
   final Permission _permission = Permission.storage;
   bool isLoading;
-  String progress="";
+  String progress = "";
   Dio dio;
 
   @override
   void initState() {
     super.initState();
-    dio=Dio();
+    dio = Dio();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width * 0.05),
-      decoration: BoxDecoration(
-          border: Border.all(color: primaryColor),
-          borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Icon(
-              Icons.picture_as_pdf_outlined,
-              color: primaryColor,
-              size: 30,
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              widget.resource.title,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 15,
-                  decoration: TextDecoration.underline),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              widget.resource.description.toString().trim().isEmpty
-                  ? 'No resource description found'
-                  : widget.resource.description,
-              style: TextStyle(
-                fontWeight: FontWeight.w400,
-              ),
-              textAlign: TextAlign.start,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
-            GestureDetector(
-              onTap: () {
-                showMaterialModalBottomSheet(
-                  expand: false,
-                  context: context,
-                  backgroundColor: Colors.transparent,
-                  builder: (context) => Material(
-                      child: SafeArea(
-                    top: false,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ListTile(
-                          title: Text('Download'),
-                          leading: Icon(Icons.download_rounded),
-                          onTap: () async {
-                            final status = await _permission.request();
-                            if (status.isGranted) {
-                              String folderName = "ICS Downloads";
-                              var path = "storage/emulated/0/$folderName";
-                              try{
-                                await  new Directory(path).create();
-                              }catch(e){}
-                              print(widget.resource.getUrlLink());
-                              Navigator.of(context).pop();
-                              try{
-                            await   downloadFile(widget.resource.getUrlLink(), "$path/${widget.resource.url_download}");
-                              }catch(e){
-                                print(e.toString());
-                              }
-                            } else {
-                              Fluttertoast.showToast(
-                                  msg:
-                                      "You must first grant storage permission",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER,
-                                  timeInSecForIosWeb: 1,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0);
-                            }
-                          },
-                        ),
-                        ListTile(
-                          title: Text('View File'),
-                          leading: Icon(Icons.remove_red_eye_rounded),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            navigateToPage(context, PdfFileView(pdfUrl: widget.resource.getUrlLink(),));
-                            // navigateToPage(context, PDFScreen(widget.resource.getUrlLink()));
-                          },
-                        ),
-                      ],
+    return Column(
+      children: [
+        ListTile(
+          leading: Container(
+            height: 60,
+            width: 60,
+            child: Card(
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              child: GestureDetector(
+                  child: Hero(
+                    tag:"imageHero${widget.resource.file_id}",
+                    child: CachedNetworkImage(
+                      imageUrl: widget.resource.getIconImageLink(),
+                      placeholder: (context, url) =>
+                          Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) =>
+                          Center(child: Icon(Icons.error)),
                     ),
-                  )),
-                );
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Icon(
-                    Icons.file_download,
-                    color: primaryColor,
                   ),
-                ],
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) {
+                      return SingleImageScreen(
+                          tag: "imageHero${widget.resource.file_id}",
+                          imageUrl: widget.resource.getIconImageLink());
+                    }));
+                  }),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
               ),
-            )
-          ],
-        ),
-      ),
+              elevation: 5,
+              margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+            ),
+          ),
+          title: Text(
+            widget.resource.title,
+          ),
+          subtitle: Text(widget.resource.url_download),
+          isThreeLine: true,
+          trailing: GestureDetector(
+              onTapDown: (TapDownDetails details) {
+                _showPopupMenu(details.globalPosition);
+              },
+              child: Icon(Icons.more_vert_rounded)),
+        )
+      ],
     );
   }
 
+  _showPopupMenu(Offset offset) async {
+    double left = offset.dx;
+    double top = offset.dy;
+    await showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(left, top, 0, 0),
+      items: [
+        PopupMenuItem<String>(
+          child: ListTile(
+            title: Text('Download'),
+            leading: Icon(Icons.download_rounded),
+            onTap: () async {
+              final status = await _permission.request();
+              if (status.isGranted) {
+                String folderName = "ICS Downloads";
+                var path = "storage/emulated/0/$folderName";
+                try {
+                  await new Directory(path).create();
+                } catch (e) {}
+                Navigator.of(context).pop();
+                try {
+                  await downloadFile(widget.resource.getUrlLink(),
+                      "$path/${widget.resource.url_download}");
+                } catch (e) {
+                }
+              } else {
+                Fluttertoast.showToast(
+                    msg: "You must first grant storage permission",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+              }
+            },
+          ),
+        ),
+        PopupMenuItem<String>(
+          child: ListTile(
+            title: Text('View File'),
+            leading: Icon(Icons.remove_red_eye_rounded),
+            onTap: () {
+              Navigator.of(context).pop();
+              navigateToPage(
+                  context,
+                  PdfFileView(
+                    pdfUrl: widget.resource.getUrlLink(),
+                  ));
+            },
+          ),
+        ),
+      ],
+      elevation: 8.0,
+    );
+  }
 
-  Future downloadFile(String url,path) async {
-    try{
-      ProgressDialog progressDialog=ProgressDialog(context,type: ProgressDialogType.Normal);
+  Future downloadFile(String url, path) async {
+    try {
+      ProgressDialog progressDialog =
+          ProgressDialog(context, type: ProgressDialogType.Normal);
       progressDialog.style(message: "Downloading File");
       progressDialog.show();
       try {
@@ -176,10 +167,9 @@ class _ResourceListViewState extends State<ResourceListView> {
             progressDialog.update(message: "Downloading $progress");
           });
 
-          if((rec / total) == 1){
+          if ((rec / total) == 1) {
             Fluttertoast.showToast(
-                msg:
-               "Has has been saved to 'ICS Downloads'",
+                msg: "Has has been saved to 'ICS Downloads'",
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,
@@ -187,10 +177,9 @@ class _ResourceListViewState extends State<ResourceListView> {
                 fontSize: 16.0);
           }
         });
-      }catch(ee){
+      } catch (ee) {
         Fluttertoast.showToast(
-            msg:
-           ee.toString(),
+            msg: ee.toString(),
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,
@@ -198,29 +187,47 @@ class _ResourceListViewState extends State<ResourceListView> {
             fontSize: 16.0);
       }
       progressDialog.hide();
-
-    }catch( e) {}
+    } catch (e) {}
   }
-
 }
 
 
-class PDFScreen extends StatelessWidget {
-  String pathPDF = "";
-  PDFScreen(this.pathPDF);
+
+class SingleImageScreen extends StatelessWidget {
+  final imageUrl, tag;
+
+  const SingleImageScreen({Key key, @required this.imageUrl, this.tag})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return PDFViewerScaffold(
-        appBar: AppBar(
-          title: Text("Document"),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.share),
-              onPressed: () {},
+    return Scaffold(
+      body: GestureDetector(
+        child: Container(
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height,
+          child: Hero(
+            tag: tag,
+            child: CachedNetworkImage(
+              imageUrl: imageUrl,
+              placeholder: (context, url) =>
+                  Center(child: CircularProgressIndicator()),
+              errorWidget: (context, url, error) =>
+                  Center(child: Icon(Icons.error)),
             ),
-          ],
+          ),
         ),
-        path: pathPDF);
+        onTap: () {
+          Navigator.pop(context);
+        },
+      ),
+    );
   }
 }
+

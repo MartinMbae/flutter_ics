@@ -9,6 +9,7 @@ class CategoryDownload {
       description,
       url_download,
       cat_dir,
+      file_pic,
       title;
 
   CategoryDownload({
@@ -19,6 +20,7 @@ class CategoryDownload {
     @required this.url_download,
     @required this.title,
     @required this.cat_dir,
+    @required this.file_pic,
   });
 
   static CategoryDownload fromJson(dynamic json) {
@@ -30,10 +32,15 @@ class CategoryDownload {
       url_download: json['url_download'],
       title: json['title'],
       cat_dir: json['cat_dir'],
+      file_pic: json['file_pic'],
     );
   }
 
   String getUrlLink(){
     return Constants.baseUrlForFiles+ 'jdownloads/$cat_dir/$url_download';
+  }
+
+  String getIconImageLink(){
+    return Constants.baseUrlForFiles + 'images/jdownloads/fileimages/$file_pic';
   }
 }

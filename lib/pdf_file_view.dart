@@ -31,8 +31,7 @@ class _PdfFileViewState extends State<PdfFileView> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
+    return Scaffold(
             appBar: AppBar(
               title: Text("Resource Preview"),
             ),
@@ -80,6 +79,6 @@ class _PdfFileViewState extends State<PdfFileView> {
                       ],
                     );
                   }, */
-                ))));
+                )));
   }
 }
