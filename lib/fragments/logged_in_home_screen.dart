@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ics/cpd_points.dart';
 import 'package:flutter_ics/design_course/ics_events_list_view.dart';
-import 'package:flutter_ics/load_news.dart';
+import 'package:flutter_ics/fragments/all_news_page.dart';
+import 'package:flutter_ics/load_news_preview.dart';
 import 'package:flutter_ics/utils/app_colors.dart';
 import 'package:flutter_ics/utils/constants.dart';
 import 'package:flutter_ics/utils/custom_methods.dart';
@@ -47,11 +49,6 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
     setState(() {
       current_username = username;
       current_imageUrl = imageUrl;
-
-      print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-      print(current_imageUrl);
-      print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-
     });
   }
 
@@ -74,19 +71,56 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
                   .top,
             ),
             Expanded(
-              child: SingleChildScrollView(
-                child: Container(
-                  // height: MediaQuery.of(context).size.height * 2,
-                  child: Column(
-                    children: <Widget>[
-                      getAppBarUI(),
-                      getProfileDetails(),
-                      getEvents(),
-                      Divider(height: 5,),
-                      getMyBookedEvents(),
-                      LoadIcsNews(),
-                    ],
-                  ),
+              child: Container(
+                child: ListView(
+                  children: [
+                    getAppBarUI(),
+                    getProfileDetails(),
+                    getEvents(),
+                    Divider(height: 5,),
+                    getMyBookedEvents(),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12.0, left: 18, right: 16),
+                      child: Text(
+                        'News',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          letterSpacing: 0.27,
+                            color: primaryColor
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    LoadNewPreview(count: 10),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    RaisedButton(
+                      onPressed: () {
+                        navigateToPage(context, AllNewsPage());
+                      },
+                      color: primaryColor,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            'Read All News',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -376,6 +410,7 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
               fontWeight: FontWeight.w600,
               fontSize: 16,
               letterSpacing: 0.27,
+                color: primaryColor
             ),
           ),
         ),
@@ -404,6 +439,7 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
               fontWeight: FontWeight.w600,
               fontSize: 16,
               letterSpacing: 0.27,
+                color: primaryColor
             ),
           ),
         ),

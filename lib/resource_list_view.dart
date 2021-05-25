@@ -9,10 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_ics/models/category_downloads.dart';
 import 'package:flutter_ics/pdf_file_view.dart';
-import 'package:flutter_ics/utils/app_colors.dart';
 import 'package:flutter_ics/utils/custom_methods.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
@@ -190,8 +188,6 @@ class _ResourceListViewState extends State<ResourceListView> {
     } catch (e) {}
   }
 }
-
-
 
 class SingleImageScreen extends StatelessWidget {
   final imageUrl, tag;

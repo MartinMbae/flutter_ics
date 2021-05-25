@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: primaryColor,
+        accentColor: primaryColor,
         primaryColorDark: primaryColorDark,
         primaryColorLight: primaryColorLight,
         textTheme: GoogleFonts.montserratTextTheme(

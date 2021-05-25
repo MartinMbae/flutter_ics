@@ -6,11 +6,13 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_awesome_alert_box/flutter_awesome_alert_box.dart';
+import 'package:flutter_ics/empty_screen.dart';
 import 'package:flutter_ics/fragments/resource_center_page.dart';
 import 'package:flutter_ics/models/categories.dart';
 import 'package:flutter_ics/utils/app_colors.dart';
 import 'package:flutter_ics/utils/constants.dart';
 import 'package:flutter_ics/utils/custom_methods.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class DownloadsCategoryPage extends StatefulWidget {
@@ -82,10 +84,7 @@ class _DownloadsCategoryPageState extends State<DownloadsCategoryPage> with Tick
                     if (snapshot.hasData) {
                       List<dynamic> eventsList = snapshot.data;
                       if (eventsList.length == 0) {
-                        return Text("No Category found at the moment.",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.red),
-                        );
+                          return EmptyPage(icon: FontAwesomeIcons.sadTear, message: "No Category found at the moment. Try again later", height: 400.0,);
                       } else {
                         return ListView.builder(
                           padding: EdgeInsets.only(right: 20),

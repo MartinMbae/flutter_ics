@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_ics/empty_screen.dart';
 import 'package:flutter_ics/models/categories.dart';
 import 'package:flutter_ics/models/category_downloads.dart';
 import 'package:flutter_ics/resource_list_view.dart';
 import 'package:flutter_ics/utils/constants.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class ResourceCenterPage extends StatefulWidget {
@@ -67,6 +69,9 @@ class _ResourceCenterPageState extends State<ResourceCenterPage> with TickerProv
           builder:(context, snapshot) {
             if (snapshot.hasData) {
               List<dynamic> eventsList = snapshot.data;
+              if(eventsList.length == 0){
+                return EmptyPage(icon: FontAwesomeIcons.sadTear, message: "No resource item found at the moment. Try again later", height: 400.0,);
+              }
              return ListView.separated(
                shrinkWrap: true,
                itemCount: eventsList.length,

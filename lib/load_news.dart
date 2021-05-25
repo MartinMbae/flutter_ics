@@ -48,29 +48,7 @@ class _LoadIcsNewsState extends State<LoadIcsNews> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
-            child: Text(
-              'News',
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-                letterSpacing: 0.27,
-                color: darkerText,
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          getNewsBody()
-        ],
-      ),
+      child: getNewsBody(),
     );
   }
 
@@ -89,6 +67,7 @@ class _LoadIcsNewsState extends State<LoadIcsNews> {
           children: [
             Expanded(
               child: ListView.builder(
+                padding: EdgeInsets.only(bottom: 200),
                 shrinkWrap: true,
                 controller: scrollController,
                 // physics: BouncingScrollPhysics(),

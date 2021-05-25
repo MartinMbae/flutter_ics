@@ -54,6 +54,8 @@ dependencies:
   permission_handler: ^8.0.0+1
   dio: ^4.0.0
   progress_dialog: ^1.2.4
+  group_radio_button: ^1.1.0
+  flutter_radio_group: ^2.0.0
 
 dev_dependencies:
   flutter_test:

@@ -71,7 +71,7 @@ class CsListView extends StatelessWidget {
                 SizedBox(height: 10,),
                 ProfileRow(title: "CS(K) / FCS(K)", content: csData.CPSK),
                 SizedBox(height: 10,),
-                ProfileRow(title: "Company", content: csData.COMPANY),
+                ProfileRow(title: "Firm", content: csData.COMPANY),
                 SizedBox(height: 10,),
                 ProfileRow(title: "Practice Sector", content: csData.practice_sector),
                 SizedBox(height: 10,),

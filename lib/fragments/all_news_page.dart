@@ -4,14 +4,14 @@ import 'package:flutter_ics/load_news.dart';
 import 'package:flutter_ics/utils/app_colors.dart';
 import 'package:flutter_ics/utils/custom_methods.dart';
 
-class GuestHome extends StatefulWidget {
-  const GuestHome({Key key}) : super(key: key);
+class AllNewsPage extends StatefulWidget {
+  const AllNewsPage({Key key}) : super(key: key);
 
   @override
-  _GuestHomeState createState() => _GuestHomeState();
+  _AllNewsPageState createState() => _AllNewsPageState();
 }
 
-class _GuestHomeState extends State<GuestHome> with TickerProviderStateMixin {
+class _AllNewsPageState extends State<AllNewsPage> with TickerProviderStateMixin {
 
   AnimationController animationController;
   final ScrollController _scrollController = ScrollController();
@@ -41,33 +41,8 @@ class _GuestHomeState extends State<GuestHome> with TickerProviderStateMixin {
       backgroundColor: whiteFaded,
       appBar: AppBar(
         centerTitle: true,
-        title:  Image.asset("assets/images/logo.png", height: 80, width: 80,),
+        title: Text("Read ICS News"),
         elevation: 0,
-        actions: [
-          GestureDetector(
-            onTap: () async{
-              await navigateToPage(context, LoginPage());
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  'Login'.toUpperCase(),
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    color: Colors.white,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(Icons.account_box_outlined,
-                      color: Colors.white),
-                ),
-              ],
-            ),
-          )
-        ],
       ),
       body: FutureBuilder<bool>(
         future: getData(),
@@ -86,7 +61,7 @@ class _GuestHomeState extends State<GuestHome> with TickerProviderStateMixin {
                       controller: _scrollController,
                       headerSliverBuilder:
                           (BuildContext context, bool innerBoxIsScrolled) {
-                        return <Widget>[
+                        return [
                           SliverPersistentHeader(
                             pinned: true,
                             floating: true,
@@ -97,7 +72,7 @@ class _GuestHomeState extends State<GuestHome> with TickerProviderStateMixin {
                                   padding:
                                   EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 12),
                                   child:  Text(
-                                    'Latest ICS News',
+                                    'Latest News',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 16,
@@ -121,6 +96,8 @@ class _GuestHomeState extends State<GuestHome> with TickerProviderStateMixin {
       ),
     );
   }
+
+
 }
 
 
