@@ -95,7 +95,7 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
                     const SizedBox(
                       height: 12,
                     ),
-                    LoadNewPreview(count: 10),
+                    LoadNewPreview(count: 5),
                     const SizedBox(
                       height: 12,
                     ),

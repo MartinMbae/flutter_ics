@@ -128,7 +128,7 @@ class _CsDirectoryPageState extends State<CsDirectoryPage>
           loadSorted ?
           Container(height: MediaQuery.of(context).size.height,child: LoadSortedCsDirectories(searchTerm: sortTerm,))
           :
-          Container(height: MediaQuery.of(context).size.height,child: LoadCsDirectories())
+          Container(height: MediaQuery.of(context).size.height * 0.7,child: LoadCsDirectories())
         ],
       ),
     );

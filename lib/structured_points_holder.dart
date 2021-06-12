@@ -9,10 +9,12 @@ import 'package:flutter_ics/models/cpd_point_structured.dart';
 class CpdPointsStructuredHolder extends StatefulWidget {
   final CpdPointStructured cpdPoint;
 
-  const CpdPointsStructuredHolder({Key key, @required this.cpdPoint}) : super(key: key);
+  const CpdPointsStructuredHolder({Key key, @required this.cpdPoint})
+      : super(key: key);
 
   @override
-  _CpdPointsStructuredHolderState createState() => _CpdPointsStructuredHolderState();
+  _CpdPointsStructuredHolderState createState() =>
+      _CpdPointsStructuredHolderState();
 }
 
 class _CpdPointsStructuredHolderState extends State<CpdPointsStructuredHolder> {
@@ -32,6 +34,7 @@ class _CpdPointsStructuredHolderState extends State<CpdPointsStructuredHolder> {
         child: Column(
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
                   child: Container(
@@ -40,7 +43,8 @@ class _CpdPointsStructuredHolderState extends State<CpdPointsStructuredHolder> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("${widget.cpdPoint.COMMENTS}",
-                            style: Theme.of(context)
+                            style: Theme
+                                .of(context)
                                 .textTheme
                                 .subtitle1
                                 .apply(fontSizeFactor: 0.9)),
@@ -51,9 +55,7 @@ class _CpdPointsStructuredHolderState extends State<CpdPointsStructuredHolder> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 8,
-                ),
+
                 Container(
                   width: 60,
                   child: Column(
@@ -66,10 +68,13 @@ class _CpdPointsStructuredHolderState extends State<CpdPointsStructuredHolder> {
                       ),
 
                       Text("+${widget.cpdPoint.CREDITS}",
-                          style: Theme.of(context)
+                          style: Theme
+                              .of(context)
                               .textTheme
                               .subtitle1
-                              .apply(fontSizeFactor: 0.9, color: Colors.green,  fontWeightDelta: 1))
+                              .apply(fontSizeFactor: 0.9,
+                              color: Colors.green,
+                              fontWeightDelta: 1))
                     ],
                   ),
                 ),
@@ -78,8 +83,16 @@ class _CpdPointsStructuredHolderState extends State<CpdPointsStructuredHolder> {
             Divider(height: 1,),
             Row(
               children: [
-                Text("Date : ", style: Theme.of(context).textTheme.subtitle1.apply(fontSizeFactor: 0.8)),
-                Text("${widget.cpdPoint.DATE}", style: Theme.of(context).textTheme.subtitle1.apply(fontSizeFactor: 0.8, color: Colors.green)),
+                Text("Date : ", style: Theme
+                    .of(context)
+                    .textTheme
+                    .subtitle1
+                    .apply(fontSizeFactor: 0.8)),
+                Text("${widget.cpdPoint.DATE}", style: Theme
+                    .of(context)
+                    .textTheme
+                    .subtitle1
+                    .apply(fontSizeFactor: 0.8, color: Colors.green)),
               ],
             ),
             SizedBox(
@@ -88,8 +101,16 @@ class _CpdPointsStructuredHolderState extends State<CpdPointsStructuredHolder> {
 
             Row(
               children: [
-                Text("Ref : ", style: Theme.of(context).textTheme.subtitle1.apply(fontSizeFactor: 0.8)),
-                Text("${widget.cpdPoint.REF}", style: Theme.of(context).textTheme.subtitle1.apply(fontSizeFactor: 0.8, color: Colors.green)),
+                Text("Ref : ", style: Theme
+                    .of(context)
+                    .textTheme
+                    .subtitle1
+                    .apply(fontSizeFactor: 0.8)),
+                Text("${widget.cpdPoint.REF}", style: Theme
+                    .of(context)
+                    .textTheme
+                    .subtitle1
+                    .apply(fontSizeFactor: 0.8, color: Colors.green)),
               ],
             ),
             SizedBox(
@@ -98,8 +119,16 @@ class _CpdPointsStructuredHolderState extends State<CpdPointsStructuredHolder> {
 
             Row(
               children: [
-                Text("Type : ", style: Theme.of(context).textTheme.subtitle1.apply(fontSizeFactor: 0.8)),
-                Text("${widget.cpdPoint.TYPE}", style: Theme.of(context).textTheme.subtitle1.apply(fontSizeFactor: 0.8, color: Colors.green)),
+                Text("Type : ", style: Theme
+                    .of(context)
+                    .textTheme
+                    .subtitle1
+                    .apply(fontSizeFactor: 0.8)),
+                Text("${widget.cpdPoint.TYPE}", style: Theme
+                    .of(context)
+                    .textTheme
+                    .subtitle1
+                    .apply(fontSizeFactor: 0.8, color: Colors.green)),
               ],
             ),
             SizedBox(
@@ -108,8 +137,16 @@ class _CpdPointsStructuredHolderState extends State<CpdPointsStructuredHolder> {
 
             Row(
               children: [
-                Text("Hours : ", style: Theme.of(context).textTheme.subtitle1.apply(fontSizeFactor: 0.8)),
-                Text("${widget.cpdPoint.HOURS}", style: Theme.of(context).textTheme.subtitle1.apply(fontSizeFactor: 0.8, color: Colors.green)),
+                Text("Hours : ", style: Theme
+                    .of(context)
+                    .textTheme
+                    .subtitle1
+                    .apply(fontSizeFactor: 0.8)),
+                Text("${widget.cpdPoint.HOURS}", style: Theme
+                    .of(context)
+                    .textTheme
+                    .subtitle1
+                    .apply(fontSizeFactor: 0.8, color: Colors.green)),
               ],
             ),
             SizedBox(

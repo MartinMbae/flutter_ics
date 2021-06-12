@@ -64,7 +64,7 @@ class SingleCS extends StatelessWidget {
                     SizedBox(height: 10,),
                     ProfileRow(title: "Gender", content: csDirectory.gender),
                     SizedBox(height: 10,),
-                    ProfileRow(title: "Membership Number", content: csDirectory.membership_no),
+                    ProfileRow(title: "Phone Number", content: csDirectory.TEL),
                     SizedBox(height: 10,),
                     ProfileRow(title: "CS(K) / FCS(K)", content: csDirectory.CPSK),
                     SizedBox(height: 10,),

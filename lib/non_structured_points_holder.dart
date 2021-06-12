@@ -31,6 +31,7 @@ class _CpdPointsNonStructuredHolderState extends State<CpdPointsNonStructuredHol
         child: Column(
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
                   child: Container(
@@ -49,9 +50,6 @@ class _CpdPointsNonStructuredHolderState extends State<CpdPointsNonStructuredHol
                       ],
                     ),
                   ),
-                ),
-                SizedBox(
-                  width: 8,
                 ),
                 Container(
                   width: 60,

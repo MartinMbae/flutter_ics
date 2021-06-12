@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_ics/homepage/cs_list_view.dart';
 import 'package:flutter_ics/models/cs_directory.dart';
 import 'package:flutter_ics/utils/constants.dart';
@@ -48,9 +49,7 @@ class _LoadCsDirectoriesState extends State<LoadCsDirectories> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: getCsDirectoryBody(),
-      ),
+      body: getCsDirectoryBody(),
     );
   }
 
@@ -70,8 +69,10 @@ class _LoadCsDirectoriesState extends State<LoadCsDirectories> {
           children: [
             Expanded(
               child: ListView.separated(
+                padding: EdgeInsets.only(bottom: 20),
                 controller: scrollController,
-                // physics: BouncingScrollPhysics(),
+                shrinkWrap: true,
+                // physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (c, i) {
                   return  CsListView(
                     csData: CsDirectory.fromJson(initialCsList[i]),
@@ -92,7 +93,7 @@ class _LoadCsDirectoriesState extends State<LoadCsDirectories> {
 
 class CsDirectoryApiHelper {
     Future<List<dynamic>> fetchCsList([String url]) async {
-      var initialUrl = Constants.baseUrl + "users/10/0";
+      var initialUrl = Constants.baseUrl + "users/4/0";
     var response = await http.get(Uri.parse(url ?? initialUrl));
     if (response == null) {
       throw new Exception('Error fetching CS Directories');
@@ -100,12 +101,13 @@ class CsDirectoryApiHelper {
     if (response.statusCode != 200) {
       throw new Exception('Error fetching CS Directories');
     }
+    print(response.body);
     List<dynamic> events = jsonDecode(response.body);
     return events;
   }
 
   getApi(int start) {
-    final mainUrl = Constants.baseUrl + "users/10/";
+    final mainUrl = Constants.baseUrl + "users/4/";
     return mainUrl + start.toString();
   }
 }
