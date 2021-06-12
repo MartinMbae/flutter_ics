@@ -19,20 +19,29 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  String currentImageUrl,
+      currentName,
+      currentPostalCode,
+      currentAddress,
+      currentMembership,
+      currentGender,
+      currentEmail,
+      currentUsername,
+      currentPhone,
+      currentBiography,
+      currentTown,
+      currentBranch;
 
-  String currentImageUrl, currentName, currentPostalCode, currentAddress, currentMembership, currentGender,  currentEmail, currentUsername, currentPhone, currentBiography, currentTown, currentBranch;
-  
-  TextEditingController nameTextController =  TextEditingController();
-  TextEditingController emailController =  TextEditingController();
-  TextEditingController phoneController =  TextEditingController();
-  TextEditingController usernameController =  TextEditingController();
-  TextEditingController membershipNumberController =  TextEditingController();
-  TextEditingController postalCodeController =  TextEditingController();
-  TextEditingController townCodeController =  TextEditingController();
-  TextEditingController addressCodeController =  TextEditingController();
-  TextEditingController biographyCodeController =  TextEditingController();
-  TextEditingController branchCodeController =  TextEditingController();
-
+  TextEditingController nameTextController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController membershipNumberController = TextEditingController();
+  TextEditingController postalCodeController = TextEditingController();
+  TextEditingController townCodeController = TextEditingController();
+  TextEditingController addressCodeController = TextEditingController();
+  TextEditingController biographyCodeController = TextEditingController();
+  TextEditingController branchCodeController = TextEditingController();
 
   String genderValue, categoryValue;
 
@@ -89,7 +98,6 @@ class _ProfilePageState extends State<ProfilePage> {
       // practiceSectorValue = practiceSector;
       branchCodeController.text = branch;
       phoneController.text = phone;
-
     });
   }
 
@@ -97,12 +105,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-
     progressDialog = ArsProgressDialog(context,
         blur: 2,
         backgroundColor: Color(0x33000000),
         animationDuration: Duration(milliseconds: 500));
-
 
     return Scaffold(
       appBar: AppBar(
@@ -145,39 +151,41 @@ class _ProfilePageState extends State<ProfilePage> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                if(currentImageUrl != null) Container(
-                                        child: CachedNetworkImage(
-                                          width: 140.0,
-                                          height: 140.0,
-                                          imageUrl: currentImageUrl,
-                                          errorWidget: (context, url, error) =>
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                    image: AssetImage('assets/images/profile-placeholder.png'),
-                                                    fit: BoxFit.cover,),
-                                                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                                                ),
-                                              ),
-                                          imageBuilder:
-                                              (context, imageProvider) =>
-                                                  Container(
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: imageProvider,
-                                                fit: BoxFit.cover,
-                                              ),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(12.0)),
-                                            ),
+                                if (currentImageUrl != null)
+                                  Container(
+                                    child: CachedNetworkImage(
+                                      width: 140.0,
+                                      height: 140.0,
+                                      imageUrl: currentImageUrl,
+                                      errorWidget: (context, url, error) =>
+                                          Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: AssetImage(
+                                                'assets/images/profile-placeholder.png'),
+                                            fit: BoxFit.cover,
                                           ),
-                                          progressIndicatorBuilder: (context,
-                                                  url, downloadProgress) =>
-                                              CircularProgressIndicator(
-                                                  value: downloadProgress
-                                                      .progress),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(12.0)),
                                         ),
                                       ),
+                                      imageBuilder: (context, imageProvider) =>
+                                          Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(12.0)),
+                                        ),
+                                      ),
+                                      progressIndicatorBuilder: (context, url,
+                                              downloadProgress) =>
+                                          CircularProgressIndicator(
+                                              value: downloadProgress.progress),
+                                    ),
+                                  ),
                               ],
                             ),
                           ]),
@@ -204,7 +212,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   mainAxisSize: MainAxisSize.max,
                                   children: <Widget>[
                                     new Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
                                         new Text(
@@ -224,7 +233,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   mainAxisSize: MainAxisSize.max,
                                   children: <Widget>[
                                     new Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
                                         new Text(
@@ -246,8 +256,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     new Flexible(
                                       child: new TextFormField(
                                         controller: nameTextController,
-                                        validator: (value){
-                                          if(value.isEmpty){
+                                        validator: (value) {
+                                          if (value.isEmpty) {
                                             return "Fill this field";
                                           }
                                           return null;
@@ -263,7 +273,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   mainAxisSize: MainAxisSize.max,
                                   children: <Widget>[
                                     new Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
                                         new Text(
@@ -285,8 +296,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     new Flexible(
                                       child: new TextFormField(
                                         controller: emailController,
-                                        validator: (value){
-                                          if(value.isEmpty){
+                                        validator: (value) {
+                                          if (value.isEmpty) {
                                             return "Fill this field";
                                           }
                                           return null;
@@ -302,7 +313,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   mainAxisSize: MainAxisSize.max,
                                   children: <Widget>[
                                     new Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
                                         new Text(
@@ -325,10 +337,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                       child: new TextFormField(
                                         maxLength: 10,
                                         controller: phoneController,
-                                        validator: (value){
-                                          if(value.isEmpty){
+                                        validator: (value) {
+                                          if (value.isEmpty) {
                                             return "Fill this field";
-                                          }else if(value.trim().length != 10){
+                                          } else if (value.trim().length !=
+                                              10) {
                                             return "Phone Number must Contain 10 digits";
                                           }
                                           return null;
@@ -338,7 +351,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ],
                                 )),
 
-
                             Padding(
                                 padding: EdgeInsets.only(
                                     left: 25.0, right: 25.0, top: 25.0),
@@ -346,7 +358,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   mainAxisSize: MainAxisSize.max,
                                   children: <Widget>[
                                     new Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
                                         new Text(
@@ -368,17 +381,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                     new Flexible(
                                       child: new TextFormField(
                                         controller: membershipNumberController,
-                                        validator: (value){
-                                          if(value.isEmpty){
-                                            return "Fill this field";
-                                          }
-                                          return null;
-                                        },
+                                        enabled: false,
                                       ),
                                     ),
                                   ],
                                 )),
-
 
                             // Padding(
                             //     padding: EdgeInsets.only(
@@ -425,7 +432,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             //       ],
                             //     )),
 
-
                             // Padding(
                             //     padding: EdgeInsets.only(
                             //         left: 25.0, right: 25.0, top: 25.0),
@@ -471,7 +477,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             //       ],
                             //     )),
 
-
                             Padding(
                                 padding: EdgeInsets.only(
                                     left: 25.0, right: 25.0, top: 25.0),
@@ -479,7 +484,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   mainAxisSize: MainAxisSize.max,
                                   children: <Widget>[
                                     new Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
                                         new Text(
@@ -501,8 +507,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     new Flexible(
                                       child: new TextFormField(
                                         controller: postalCodeController,
-                                        validator: (value){
-                                          if(value.isEmpty){
+                                        validator: (value) {
+                                          if (value.isEmpty) {
                                             return "Fill this field";
                                           }
                                           return null;
@@ -512,8 +518,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ],
                                 )),
 
-
-
                             Padding(
                                 padding: EdgeInsets.only(
                                     left: 25.0, right: 25.0, top: 25.0),
@@ -521,7 +525,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   mainAxisSize: MainAxisSize.max,
                                   children: <Widget>[
                                     new Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
                                         new Text(
@@ -543,8 +548,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     new Flexible(
                                       child: new TextFormField(
                                         controller: townCodeController,
-                                        validator: (value){
-                                          if(value.isEmpty){
+                                        validator: (value) {
+                                          if (value.isEmpty) {
                                             return "Fill this field";
                                           }
                                           return null;
@@ -554,8 +559,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ],
                                 )),
 
-
-
                             Padding(
                                 padding: EdgeInsets.only(
                                     left: 25.0, right: 25.0, top: 25.0),
@@ -563,7 +566,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   mainAxisSize: MainAxisSize.max,
                                   children: <Widget>[
                                     new Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
                                         new Text(
@@ -585,8 +589,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     new Flexible(
                                       child: new TextFormField(
                                         controller: addressCodeController,
-                                        validator: (value){
-                                          if(value.isEmpty){
+                                        validator: (value) {
+                                          if (value.isEmpty) {
                                             return "Fill this field";
                                           }
                                           return null;
@@ -596,8 +600,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ],
                                 )),
 
-
-
                             Padding(
                                 padding: EdgeInsets.only(
                                     left: 25.0, right: 25.0, top: 25.0),
@@ -605,7 +607,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   mainAxisSize: MainAxisSize.max,
                                   children: <Widget>[
                                     new Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
                                         new Text(
@@ -627,8 +630,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     new Flexible(
                                       child: new TextFormField(
                                         controller: biographyCodeController,
-                                        validator: (value){
-                                          if(value.isEmpty){
+                                        validator: (value) {
+                                          if (value.isEmpty) {
                                             return "Fill this field";
                                           }
                                           return null;
@@ -637,8 +640,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ),
                                   ],
                                 )),
-
-
 
                             // Padding(
                             //     padding: EdgeInsets.only(
@@ -685,7 +686,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             //     )),
 
                             Padding(
-                              padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
+                              padding: EdgeInsets.only(
+                                  left: 25.0, right: 25.0, top: 45.0),
                               child: new Row(
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -695,37 +697,61 @@ class _ProfilePageState extends State<ProfilePage> {
                                       padding: EdgeInsets.only(right: 10.0),
                                       child: Container(
                                           child: new RaisedButton(
-                                            child: new Text("Update Profile"),
-                                            textColor: Colors.white,
-                                            color: primaryColor,
-                                            onPressed: () async{
-                                              if(formKey.currentState.validate()){
-                                                String user_id = await getUserId();
-                                                String name = nameTextController.text;
-                                                String email = emailController.text;
-                                                String phone = phoneController.text;
-                                                String membershipNumber = membershipNumberController.text;
-                                                String gender = genderValue;
-                                                String category = categoryValue;
-                                                String dob = await getDOB();
-                                                String postalCode = postalCodeController.text;
-                                                String town = townCodeController.text;
-                                                String address = addressCodeController.text;
-                                                String biography = biographyCodeController.text;
-                                                String practiceSector = await getPracticeSector();
-                                                String branch = branchCodeController.text;
+                                        child: new Text("Update Profile"),
+                                        textColor: Colors.white,
+                                        color: primaryColor,
+                                        onPressed: () async {
+                                          if (formKey.currentState.validate()) {
+                                            String user_id = await getUserId();
+                                            String name =
+                                                nameTextController.text;
+                                            String email = emailController.text;
+                                            String phone = phoneController.text;
+                                            String membershipNumber =
+                                                membershipNumberController.text;
+                                            String gender = genderValue;
+                                            String category = categoryValue;
+                                            String dob = await getDOB();
+                                            String postalCode =
+                                                postalCodeController.text;
+                                            String town =
+                                                townCodeController.text;
+                                            String address =
+                                                addressCodeController.text;
+                                            String biography =
+                                                biographyCodeController.text;
+                                            String practiceSector =
+                                                await getPracticeSector();
+                                            String branch =
+                                                branchCodeController.text;
 
-                                                updateProfile(user_id, name, email, phone,  membershipNumber, category, gender,
-                                                    dob, postalCode, town, address, biography, practiceSector, branch);
-
-
-                                              }else{
-                                                Scaffold.of(context).showSnackBar(SnackBar(content: Text("Fill all the required fields")));
-                                              }
-                                            },
-                                            shape: new RoundedRectangleBorder(
-                                                borderRadius: new BorderRadius.circular(20.0)),
-                                          )),
+                                            updateProfile(
+                                                user_id,
+                                                name,
+                                                email,
+                                                phone,
+                                                membershipNumber,
+                                                category,
+                                                gender,
+                                                dob,
+                                                postalCode,
+                                                town,
+                                                address,
+                                                biography,
+                                                practiceSector,
+                                                branch);
+                                          } else {
+                                            Scaffold.of(context).showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        "Fill all the required fields")));
+                                          }
+                                        },
+                                        shape: new RoundedRectangleBorder(
+                                            borderRadius:
+                                                new BorderRadius.circular(
+                                                    20.0)),
+                                      )),
                                     ),
                                     flex: 2,
                                   ),
@@ -746,12 +772,24 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Future<void> updateProfile(String user_id, String name, String email, String phone, String membershipNumber, String category, String gender, String dob, String postalCode,
-      String town, String address, String biography, String practiceSector, String branch) async{
-
+  Future<void> updateProfile(
+      String user_id,
+      String name,
+      String email,
+      String phone,
+      String membershipNumber,
+      String category,
+      String gender,
+      String dob,
+      String postalCode,
+      String town,
+      String address,
+      String biography,
+      String practiceSector,
+      String branch) async {
     progressDialog.show();
 
-    String url =  Constants.baseUrl + 'users/updateprofile';
+    String url = Constants.baseUrl + 'users/updateprofile';
 
     Map<String, String> someMap = {
       "user_id": user_id,
@@ -769,17 +807,16 @@ class _ProfilePageState extends State<ProfilePage> {
       "branch": branch,
     };
 
-    Request req = Request(
-        'PUT', Uri.parse(url))
+    Request req = Request('PUT', Uri.parse(url))
       ..body = json.encode(someMap)
       ..headers.addAll({
         "Content-type": "application/json",
       });
 
     var response = null;
-    try{
-      response =  await req.send();
-    }catch(Exception){
+    try {
+      response = await req.send();
+    } catch (Exception) {
       progressDialog.dismiss();
       DangerAlertBox(
           context: context,
@@ -788,9 +825,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
     progressDialog.dismiss();
     if (response.statusCode == 200) {
-      response.stream
-          .transform(utf8.decoder)
-          .listen((value) async{
+      response.stream.transform(utf8.decoder).listen((value) async {
         Map<String, dynamic> responseMessage = jsonDecode(value);
         print(value);
         var status = responseMessage['status'];
@@ -810,17 +845,17 @@ class _ProfilePageState extends State<ProfilePage> {
           );
           SuccessAlertBox(
               context: context,
-              messageText:responseMessage['message']+" Login again to your account with the new details",
+              messageText: responseMessage['message'] +
+                  " Login again to your account with the new details",
               title: "Success");
         }
       });
-    }else{
+    } else {
       DangerAlertBox(
           context: context,
           messageText:
-          "Unknown error occurred. Please check your internet connection and try again.",
+              "Unknown error occurred. Please check your internet connection and try again.",
           title: "Error");
     }
-
   }
 }

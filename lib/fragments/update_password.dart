@@ -4,11 +4,12 @@ import 'package:ars_progress_dialog/ars_progress_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_awesome_alert_box/flutter_awesome_alert_box.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
+import 'package:flutter_ics/auth/login.dart';
 import 'package:flutter_ics/utils/app_colors.dart';
 import 'package:flutter_ics/utils/constants.dart';
+import 'package:flutter_ics/utils/custom_methods.dart';
 import 'package:flutter_ics/utils/shared_pref.dart';
+import 'package:http/http.dart';
 
 class UpdatePassword extends StatelessWidget {
   BuildContext mainContext;
@@ -171,7 +172,7 @@ class UpdatePassword extends StatelessWidget {
                                         title: "Failed");
                                     return;
                                   } else {
-                                    Navigator.pop(context);
+                                    navigateToPageRemoveHistory(context, LoginPage());
                                     SuccessAlertBox(
                                         context: context,
                                         messageText:

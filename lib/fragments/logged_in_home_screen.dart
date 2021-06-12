@@ -106,7 +106,7 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
                       color: primaryColor,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
+                        children: [
                           Text(
                             'Read All News',
                             style: TextStyle(
@@ -236,71 +236,69 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
                           SizedBox(
                             height: 8,
                           ),
-                          Row(
-                            children: <Widget>[
-                              Container(
-                                height: 48,
-                                width: 2,
-                                decoration: BoxDecoration(
-                                  color: Colors.red.withOpacity(0.5),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(4.0)),
+                          GestureDetector(
+                            onTap: (){
+                              navigateToPage(context, CpdTabLayout());
+                            },
+                            child: Row(
+                              children: <Widget>[
+                                Container(
+                                  height: 48,
+                                  width: 2,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red.withOpacity(0.5),
+                                    borderRadius:
+                                    BorderRadius.all(Radius.circular(4.0)),
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 4, bottom: 2),
-                                      child: Text(
-                                        'Events Attended',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontFamily: "Roboto",
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 16,
-                                          letterSpacing: -0.1,
-                                          color: greyColor,
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 4, bottom: 2),
+                                        child: Text(
+                                          'CPD History',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontFamily: "Roboto",
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16,
+                                            letterSpacing: -0.1,
+                                            color: greyColor,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.end,
-                                      children: <Widget>[
-                                        SizedBox(
-                                          width: 28,
-                                          height: 28,
-                                          child: Icon(
-                                            Icons.calendar_today_outlined,
-                                            color: Colors.red.withOpacity(0.5),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 4, bottom: 3),
-                                          child: Text(
-                                            '0',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 16,
-                                              color: Color(0xFF17262A),
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.end,
+                                        children: <Widget>[
+
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 4, bottom: 3),
+                                            child: Text(
+                                              'View CPD History',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 14,
+                                                color: Color(0xFF17262A),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                           )
                         ],
                       ),
@@ -310,80 +308,77 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
                     onTap: (){
                       navigateToPage(context, CpdTabLayout());
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: Center(
-                        child: Stack(
-                          overflow: Overflow.visible,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                width: 100,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(100.0),
+                    child: Center(
+                      child: Stack(
+                        overflow: Overflow.visible,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              width: 80,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(80.0),
+                                ),
+                                border: new Border.all(
+                                    width: 4,
+                                    color: Color(0xFF2633C5)
+                                        .withOpacity(0.2)),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  FutureBuilder(
+                                    future: countMyPoints(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return Text(
+                                          "${snapshot.data}",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 16,
+                                            color: Color(0xFF17262A),
+                                          ),
+                                        );
+                                      } else {
+                                        return CircularProgressIndicator();
+                                      }
+                                    },
                                   ),
-                                  border: new Border.all(
-                                      width: 4,
-                                      color: Color(0xFF2633C5)
-                                          .withOpacity(0.2)),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    FutureBuilder(
-                                      future: countMyPoints(),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasData) {
-                                          return Text(
-                                            "${snapshot.data}",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 16,
-                                              color: Color(0xFF17262A),
-                                            ),
-                                          );
-                                        } else {
-                                          return CircularProgressIndicator();
-                                        }
-                                      },
+                                  Text(
+                                    'Points',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                      letterSpacing: 0.0,
+                                      color:
+                                      Color(0xFF3A5160).withOpacity(0.5),
                                     ),
-                                    Text(
-                                      'CPD Points',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12,
-                                        letterSpacing: 0.0,
-                                        color:
-                                        Color(0xFF3A5160).withOpacity(0.5),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: CustomPaint(
-                                painter: CurvePainter(colors: [
-                                  primaryColorLight,
-                                  primaryColor,
-                                  primaryColorDark
-                                ], angle: 120),
-                                child: SizedBox(
-                                  width: 108,
-                                  height: 108,
-                                ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: CustomPaint(
+                              painter: CurvePainter(colors: [
+                                primaryColorLight,
+                                primaryColor,
+                                primaryColorDark
+                              ], angle: 120),
+                              child: SizedBox(
+                                width: 88,
+                                height: 88,
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   )
