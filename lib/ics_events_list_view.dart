@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_ics/design_course/event_info_screen.dart';
+import 'package:flutter_ics/event_info_screen.dart';
 import 'package:flutter_ics/event_row.dart';
 import 'package:flutter_ics/models/booked_event.dart';
 import 'package:flutter_ics/models/events.dart';

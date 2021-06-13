@@ -678,7 +678,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     ImagePickerWidget(
                       diameter: 180,
-                      initialImage: File('assets/images/profile-placeholder.png'),
+                      initialImage: AssetImage('assets/images/profile-placeholder.png'),
                       shape: ImagePickerWidgetShape.circle,
                       isEditable: true,
                       onChange: (File file) {
@@ -1022,10 +1022,6 @@ class _SignUpPageState extends State<SignUpPage> {
     var response = await request.send();
     _progressDialog.dismiss(); //close dialog
 
-
-    print(response.toString());
-    print("...................");
-    print(response.statusCode);
     if (response == null) {
       DangerAlertBox(
           context: context,

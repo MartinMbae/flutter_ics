@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ics/utils/app_colors.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-import '../book_event_dialog.dart';
+import 'book_event_dialog.dart';
 
 class EventInfoScreen extends StatefulWidget {
   final eventId,eventTitle,eventPrice, startDate, endDate;

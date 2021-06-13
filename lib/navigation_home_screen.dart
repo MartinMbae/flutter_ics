@@ -11,8 +11,6 @@ import 'package:flutter_ics/fragments/logged_in_home_screen.dart';
 import 'package:flutter_ics/fragments/profile.dart';
 import 'package:flutter_ics/fragments/update_password.dart';
 
-import 'fragments/resource_center_page.dart';
-
 class NavigationHomeScreen extends StatefulWidget {
   final bool loggedIn;
 
@@ -47,22 +45,32 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppTheme.nearlyWhite,
-      child: SafeArea(
-        top: false,
-        bottom: false,
-        child: Scaffold(
-          backgroundColor: AppTheme.nearlyWhite,
-          body: DrawerUserController(
-            isLoggedIn: widget.loggedIn,
-            screenIndex: drawerIndex,
-            drawerWidth: MediaQuery.of(context).size.width * 0.75,
-            onDrawerCall: (DrawerIndex drawerIndexdata) {
-              changeIndex(drawerIndexdata);
-            },
-            screenView: screenView,
-            //we replace screen view as we need on navigate starting screens like MyHomePage, HelpScreen, FeedbackScreen, etc...
+    return WillPopScope(
+      onWillPop: () async{
+        if(drawerIndex == DrawerIndex.HOME){
+          return true;
+        }else{
+            changeIndex(DrawerIndex.HOME);
+        }
+        return false;
+      },
+      child: Container(
+        color: AppTheme.nearlyWhite,
+        child: SafeArea(
+          top: false,
+          bottom: false,
+          child: Scaffold(
+            backgroundColor: AppTheme.nearlyWhite,
+            body: DrawerUserController(
+              isLoggedIn: widget.loggedIn,
+              screenIndex: drawerIndex,
+              drawerWidth: MediaQuery.of(context).size.width * 0.75,
+              onDrawerCall: (DrawerIndex drawerIndexdata) {
+                changeIndex(drawerIndexdata);
+              },
+              screenView: screenView,
+              //we replace screen view as we need on navigate starting screens like MyHomePage, HelpScreen, FeedbackScreen, etc...
+            ),
           ),
         ),
       ),

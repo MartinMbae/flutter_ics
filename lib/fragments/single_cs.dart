@@ -28,14 +28,15 @@ class SingleCS extends StatelessWidget {
                   MainAxisAlignment.center,
                   crossAxisAlignment:
                   CrossAxisAlignment.start,
-                  children: <Widget>[
+                  children: [
+                    SizedBox(height: 24,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CachedNetworkImage(
                           height: 80,
                           width: 80,
-                          imageUrl: csDirectory.photo,
+                          imageUrl: "https://ics.ke/uploads/profile_photos/${csDirectory.photo}",
                           errorWidget: (context, url, error) => Container(
                             decoration: BoxDecoration(
                               image: DecorationImage(

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutter_ics/homepage/cs_list_view.dart';
+import 'package:flutter_ics/cs_list_view.dart';
 import 'package:flutter_ics/models/cs_directory.dart';
 import 'package:flutter_ics/utils/constants.dart';
 import 'package:http/http.dart' as http;

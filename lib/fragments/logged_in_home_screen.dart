@@ -5,7 +5,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ics/cpd_points.dart';
-import 'package:flutter_ics/design_course/ics_events_list_view.dart';
+import 'package:flutter_ics/ics_events_list_view.dart';
 import 'package:flutter_ics/fragments/all_news_page.dart';
 import 'package:flutter_ics/load_news_preview.dart';
 import 'package:flutter_ics/utils/app_colors.dart';
@@ -30,11 +30,10 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
   void initState() {
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
-    super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       getUsernameFromSharedPref();
     });
+    super.initState();
   }
 
   @override
@@ -49,6 +48,7 @@ class _LoggedInHomePageState extends State<LoggedInHomePage>
     setState(() {
       current_username = username;
       current_imageUrl = imageUrl;
+      print(current_username);
     });
   }
 

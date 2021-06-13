@@ -1,17 +1,25 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:ars_progress_dialog/ars_progress_dialog.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_awesome_alert_box/flutter_awesome_alert_box.dart';
-import 'package:http/http.dart';
-import 'package:flutter_ics/fragments/update_password.dart';
 import 'package:flutter_ics/utils/app_colors.dart';
 import 'package:flutter_ics/utils/constants.dart';
 import 'package:flutter_ics/utils/custom_methods.dart';
 import 'package:flutter_ics/utils/shared_pref.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart';
+import 'package:image_picker_widget/enum/image_picker_widget_shape.dart';
+import 'package:image_picker_widget/image_picker_widget.dart';
 
 import '../navigation_home_screen.dart';
+import 'package:async/async.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_ics/auth/login.dart';
+import 'package:path/path.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -19,8 +27,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String currentImageUrl,
-      currentName,
+  String currentName,
       currentPostalCode,
       currentAddress,
       currentMembership,
@@ -47,12 +54,18 @@ class _ProfilePageState extends State<ProfilePage> {
 
   ArsProgressDialog progressDialog;
 
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       getLoggedInUserdetails();
     });
+  }
+
+  Future<String> getProfilePhoto() async {
+    String imageUrl = await getPhoto();
+    return imageUrl;
   }
 
   Future<String> getLoggedInUserdetails() async {
@@ -67,12 +80,10 @@ class _ProfilePageState extends State<ProfilePage> {
     String biography = await getBiography();
     String practiceSector = await getPracticeSector();
     String branch = await getBranch();
-    String imageUrl = await getPhoto();
     String phone = await getPhoneNumber();
     String category = await getCategory();
     setState(() {
       currentUsername = username;
-      currentImageUrl = imageUrl;
       currentName = name;
       currentEmail = email;
       currentMembership = membershipNumber;
@@ -143,53 +154,28 @@ class _ProfilePageState extends State<ProfilePage> {
                                 )
                               ],
                             )),
-                        Padding(
-                          padding: EdgeInsets.only(top: 20.0),
-                          child:
-                              new Stack(fit: StackFit.loose, children: <Widget>[
-                            new Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                if (currentImageUrl != null)
-                                  Container(
-                                    child: CachedNetworkImage(
-                                      width: 140.0,
-                                      height: 140.0,
-                                      imageUrl: currentImageUrl,
-                                      errorWidget: (context, url, error) =>
-                                          Container(
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: AssetImage(
-                                                'assets/images/profile-placeholder.png'),
-                                            fit: BoxFit.cover,
-                                          ),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(12.0)),
-                                        ),
-                                      ),
-                                      imageBuilder: (context, imageProvider) =>
-                                          Container(
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.cover,
-                                          ),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(12.0)),
-                                        ),
-                                      ),
-                                      progressIndicatorBuilder: (context, url,
-                                              downloadProgress) =>
-                                          CircularProgressIndicator(
-                                              value: downloadProgress.progress),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ]),
-                        )
+
+                        FutureBuilder(
+                            future: getProfilePhoto(),
+                            builder: (context, snapshot){
+                              if(snapshot.hasData){
+                                String data = snapshot.data;
+                                print("Has data $data");
+                                return   ImagePickerWidget(
+                                  diameter: 180,
+                                  initialImage: data,
+                                  shape: ImagePickerWidgetShape.circle,
+                                  modalCameraText: Text("Camera"),
+                                  modalGalleryText: Text("Gallery"),
+                                  isEditable: true,
+                                  onChange: (File file) {
+                                    updateProfilePicture(file, context);
+                                  },
+                                );
+                              }else{
+                                return Container();
+                              }
+                            }),
                       ],
                     ),
                   ),
@@ -807,7 +793,7 @@ class _ProfilePageState extends State<ProfilePage> {
       "branch": branch,
     };
 
-    Request req = Request('PUT', Uri.parse(url))
+    Request req = Request('POST', Uri.parse(url))
       ..body = json.encode(someMap)
       ..headers.addAll({
         "Content-type": "application/json",
@@ -819,7 +805,7 @@ class _ProfilePageState extends State<ProfilePage> {
     } catch (Exception) {
       progressDialog.dismiss();
       DangerAlertBox(
-          context: context,
+          context: this.context,
           messageText: Exception.toString(),
           title: "Error while processing request");
     }
@@ -831,20 +817,19 @@ class _ProfilePageState extends State<ProfilePage> {
         var status = responseMessage['status'];
         if (!status) {
           DangerAlertBox(
-              context: context,
+              context: this.context,
               messageText: responseMessage['message'],
               title: "Failed");
           return;
         } else {
           await clearAllPreferences();
-          navigateToPageRemoveHistory(
-            context,
+          navigateToPageRemoveHistory( this.context,
             NavigationHomeScreen(
               loggedIn: false,
             ),
           );
           SuccessAlertBox(
-              context: context,
+              context: this.context,
               messageText: responseMessage['message'] +
                   " Login again to your account with the new details",
               title: "Success");
@@ -852,9 +837,100 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     } else {
       DangerAlertBox(
-          context: context,
+          context: this.context,
           messageText:
               "Unknown error occurred. Please check your internet connection and try again.",
+          title: "Error");
+    }
+  }
+
+  Future<void> updateProfilePicture(File photo,BuildContext context) async {
+    String url = Constants.baseUrl + 'users/updateprofilepic';
+
+    if (photo == null) {
+      Fluttertoast.showToast(
+          msg: "Please select a profile photo",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+      return;
+    }
+    progressDialog.show();
+    var photoStream =
+    new http.ByteStream(DelegatingStream.typed(photo.openRead()));
+    var photoLength = await photo.length();
+
+    String userId = await getUserId();
+
+    var uri = Uri.parse(url);
+    var request = new http.MultipartRequest("POST", uri);
+    request.fields['user_id'] = userId;
+
+
+    var photoFile = new http.MultipartFile(
+      'logo',
+      photoStream,
+      photoLength,
+      filename: basename(photo.path),
+    );
+
+    request.files.add(photoFile);
+    var response;
+    try {
+       response = await request.send().timeout(Duration(seconds: 30));
+    }on TimeoutException catch(e){
+
+      progressDialog.dismiss();
+      DangerAlertBox(
+          context: context,
+          messageText:
+          "Page took so long to load. Check your internet access and try again.",
+          title: "Error");
+      return;
+    } on SocketException catch(e){
+      progressDialog.dismiss();
+      DangerAlertBox(
+          context: context,
+          messageText:
+          "Something went wrong. Please try again.",
+          title: "Error");
+      return;
+    }
+    progressDialog.dismiss(); //close dialog
+
+    if (response == null) {
+      DangerAlertBox(
+          context: context,
+          messageText:
+          "Page took so long to load. Check your internet access and try again.",
+          title: "Error");
+    } else if (response.statusCode == 200) {
+      response.stream.transform(utf8.decoder).listen((value) async{
+        Map<String, dynamic> responseMessage = jsonDecode(value);
+        if (responseMessage.containsKey("status")) {
+          bool success = responseMessage['status'];
+          String message = responseMessage['message'];
+          String newPhoto = responseMessage['photo'];
+          await setPhoto(newPhoto);
+          if (success) {
+            SuccessAlertBox(
+                context: context, messageText: message, title: "Success");
+          } else {
+            String message = responseMessage['message'];
+            DangerAlertBox(
+                context: context, messageText: message, title: "Error");
+          }
+        }
+      });
+    } else {
+      response.stream.transform(utf8.decoder).listen((value) {
+      });
+      DangerAlertBox(
+          context: context,
+          messageText: "Something went wrong. Please try again.",
           title: "Error");
     }
   }

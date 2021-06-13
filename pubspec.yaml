@@ -37,7 +37,7 @@ dependencies:
   flutter_native_splash: ^1.1.8+4
   dropdown_formfield: ^0.1.3
   file_picker: ^3.0.1
-  image_picker_widget: ^1.0.1
+  image_picker_widget: ^1.0.3
   expandable: ^5.0.1
   dropdown_search: ^0.6.1
   http: ^0.13.3
@@ -56,6 +56,7 @@ dependencies:
   progress_dialog: ^1.2.4
   group_radio_button: ^1.1.0
   flutter_radio_group: ^2.0.0
+  table_sticky_headers: ^2.0.0
 
 dev_dependencies:
   flutter_test:

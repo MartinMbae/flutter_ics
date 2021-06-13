@@ -5,10 +5,10 @@ import 'package:flutter_ics/empty_screen.dart';
 import 'package:flutter_ics/models/cpd_point_non_structured.dart';
 import 'package:flutter_ics/models/cpd_point_structured.dart';
 import 'package:flutter_ics/non_structured_points_holder.dart';
-import 'package:flutter_ics/structured_points_holder.dart';
 import 'package:flutter_ics/utils/constants.dart';
 import 'package:flutter_ics/utils/shared_pref.dart';
 import 'package:http/http.dart' as http;
+import 'package:table_sticky_headers/table_sticky_headers.dart';
 
 class CpdTabLayout extends StatefulWidget {
   @override
@@ -16,12 +16,16 @@ class CpdTabLayout extends StatefulWidget {
 }
 
 class _CpdTabLayoutState extends State<CpdTabLayout> {
+
+
   Future<List<dynamic>> fetchNonStructuredPoints(int year) async {
     String s = await getUserId();
     String url = Constants.baseUrl + 'users/nonestructuredpoints/$s/$year';
 
     var response =
-        await http.get(Uri.parse(url)).timeout(Duration(seconds: 30));
+        await http.get(Uri.parse(url)).timeout(Duration(seconds: 30),onTimeout: (){
+          throw new Exception('Action took so long. Check your internet connection and try again');
+        });
     if (response.statusCode != 200) {
       throw new Exception('Error fetching Non-structured Points');
     }
@@ -32,8 +36,11 @@ class _CpdTabLayoutState extends State<CpdTabLayout> {
   Future<List<dynamic>> fetchStructuredPoints(int year) async {
     String s = await getUserId();
     String url = Constants.baseUrl + 'users/structuredpoints/$s/$year';
+    print(url);
     var response =
-        await http.get(Uri.parse(url)).timeout(Duration(seconds: 30));
+        await http.get(Uri.parse(url)).timeout(Duration(seconds: 30), onTimeout: (){
+          throw new Exception('Action took so long. Check your internet connection and try again');
+        });
     if (response.statusCode != 200) {
       throw new Exception('Error fetching Structured Points');
     }
@@ -43,6 +50,8 @@ class _CpdTabLayoutState extends State<CpdTabLayout> {
 
   List<int> yearsInDroDown = [];
   int yearToSearch;
+
+  List<dynamic> incidents = [];
 
   @override
   void initState() {
@@ -81,7 +90,7 @@ class _CpdTabLayoutState extends State<CpdTabLayout> {
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.symmetric(horizontal: 4),
                   child: DropdownButton(
-                    hint: Text('Please choose a location'),
+                    hint: Text('Select Year'),
                     // Not necessary for Option 1
                     value: yearToSearch.toString(),
                     onChanged: (newValue) {
@@ -108,9 +117,8 @@ class _CpdTabLayoutState extends State<CpdTabLayout> {
                             if(snapshot.connectionState == ConnectionState.waiting){
                               return Center(child: CircularProgressIndicator());
                             }else
-
                             if (snapshot.hasData) {
-                              List<dynamic> incidents = snapshot.data;
+                              incidents = snapshot.data;
                               bool hasData = incidents.length > 0;
                               if (!hasData) {
                                 return EmptyPage(
@@ -119,14 +127,28 @@ class _CpdTabLayoutState extends State<CpdTabLayout> {
                                   height: 200.0,
                                 );
                               }
-                              return ListView.builder(
-                                  itemCount: incidents.length,
-                                  itemBuilder: (context, index) {
-                                    return CpdPointsStructuredHolder(
-                                      cpdPoint: CpdPointStructured.fromJson(
-                                          incidents[index]),
-                                    );
-                                  });
+                              List<String> titleColumn =["Event Name", "Event Ref","Hours", "Date", "Points"];
+                            return  StickyHeadersTable(
+                                columnsLength: titleColumn.length,
+                                rowsLength: incidents.length,
+                                columnsTitleBuilder: (i) => Text(titleColumn[i]),
+                                rowsTitleBuilder: (i) => Text("${(i + 1)}"),
+                                contentCellBuilder: (i, j){
+                                  CpdPointStructured  cpdPointStructured =  CpdPointStructured.fromJson(incidents[j]);
+                                  if(i == 0){
+                                    return Text("${cpdPointStructured.COMMENTS}");
+                                  }else if (i == 1){
+                                    return Text("${cpdPointStructured.REF}");
+                                  }else if (j == 2){
+                                    return Text("${cpdPointStructured.HOURS}");
+                                  }else if (j == 3){
+                                    return Text("${cpdPointStructured.DATE}");
+                                  }else{
+                                    return Text("${cpdPointStructured.CREDITS}");
+                                  }
+                                },
+                                legendCell: Text('#'),
+                              );
                             } else if (snapshot.hasError) {
                               return EmptyPage(
                                 icon: Icons.error,
@@ -182,6 +204,83 @@ class _CpdTabLayoutState extends State<CpdTabLayout> {
           ),
         ),
       ),
+    );
+  }
+
+  List<Widget> _getTitleWidget() {
+    return [
+      _getTitleItemWidget("#",30),
+      _getTitleItemWidget("Event Name",200),
+      _getTitleItemWidget('Date', 100),
+      _getTitleItemWidget('Host', 100),
+      _getTitleItemWidget('Location', 100),
+      _getTitleItemWidget('Points', 100),
+    ];
+  }
+
+  Widget _getTitleItemWidget(String label, double width) {
+    return Container(
+      child: Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+      width: width,
+      height: 56,
+      padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+      alignment: Alignment.centerLeft,
+    );
+  }
+
+  Widget _generateFirstColumnRow(BuildContext context, int index) {
+    return Container(
+      child: Text((index + 1).toString()),
+      width: 30,
+      height: 52,
+      padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+      alignment: Alignment.centerLeft,
+    );
+  }
+
+  Widget _generateRightHandSideColumnRow(BuildContext context, int index) {
+
+    CpdPointStructured  cpdPointStructured =  CpdPointStructured.fromJson(
+        incidents[index]);
+
+    return Row(
+      children: [
+        Container(
+          child: Text("${cpdPointStructured.REF}"),
+          width: 200,
+          height: 52,
+          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          alignment: Alignment.centerLeft,
+        ),
+        Container(
+          child: Text("${cpdPointStructured.CREDITS}"),
+          width: 100,
+          height: 52,
+          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          alignment: Alignment.centerLeft,
+        ),
+        Container(
+          child: Text("${cpdPointStructured.CREDITS}"),
+          width: 100,
+          height: 52,
+          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          alignment: Alignment.centerLeft,
+        ),
+        Container(
+          child: Text("${cpdPointStructured.CREDITS}"),
+          width: 100,
+          height: 52,
+          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          alignment: Alignment.centerLeft,
+        ),
+        Container(
+          child: Text("${cpdPointStructured.CREDITS}"),
+          width: 100,
+          height: 52,
+          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          alignment: Alignment.centerLeft,
+        ),
+      ],
     );
   }
 }
