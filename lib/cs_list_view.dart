@@ -17,6 +17,21 @@ class CsListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    var auditor = csData.auditor;
+
+
+    bool isAuditor = false;
+
+    if (auditor != null){
+      var auditorAsInt = int.tryParse(auditor) ?? 0;
+
+      if (auditorAsInt > 0){
+        isAuditor = true;
+      }
+    }
+
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10),
       child: ClipRRect(
@@ -73,7 +88,7 @@ class CsListView extends StatelessWidget {
                 SizedBox(height: 10,),
                 ProfileRow(title: "Firm", content: csData.COMPANY),
                 SizedBox(height: 10,),
-                ProfileRow(title: "Government Auditor", content: csData.auditor),
+                ProfileRow(title: "Government Auditor", content:  isAuditor ? "Yes": "No"),
                 SizedBox(height: 10,),
                 ProfileRow(title: "Practice Sector", content: csData.practice_sector),
                 SizedBox(height: 10,),

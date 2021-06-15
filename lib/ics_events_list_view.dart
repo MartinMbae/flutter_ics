@@ -6,12 +6,14 @@ import 'package:flutter_ics/event_info_screen.dart';
 import 'package:flutter_ics/event_row.dart';
 import 'package:flutter_ics/models/booked_event.dart';
 import 'package:flutter_ics/models/events.dart';
+import 'package:flutter_ics/unbook_event_dialog.dart';
 import 'package:flutter_ics/utils/app_colors.dart';
 import 'package:flutter_ics/utils/constants.dart';
 import 'package:flutter_ics/utils/custom_methods.dart';
 import 'package:flutter_ics/utils/shared_pref.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class IcsEventsListView extends StatefulWidget {
   const IcsEventsListView({Key key, this.callBack, @required this.myEvents})
@@ -361,6 +363,25 @@ class IcsBookedEventHolder extends StatelessWidget {
                               EventRow(
                                   title: "Payment Date",
                                   subtitle: bookedEvent.payment_date),
+                              Divider(height: 1,),
+                              GestureDetector(
+                                onTap: (){
+                                  showCupertinoModalBottomSheet(
+                                      context: context,
+                                      builder: (context) => UnBookEvent(
+                                        bookedEvent: bookedEvent,
+                                      ));
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                      child: Text("UnBook Event", style: TextStyle(color: primaryColor, fontWeight: FontWeight.w600),),
+                                    ),
+                                  ],
+                                ),
+                              )
                             ],
                           ),
                         ),

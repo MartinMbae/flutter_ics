@@ -17,15 +17,16 @@ class CpdTabLayout extends StatefulWidget {
 
 class _CpdTabLayoutState extends State<CpdTabLayout> {
 
-
   Future<List<dynamic>> fetchNonStructuredPoints(int year) async {
     String s = await getUserId();
     String url = Constants.baseUrl + 'users/nonestructuredpoints/$s/$year';
 
     var response =
-        await http.get(Uri.parse(url)).timeout(Duration(seconds: 30),onTimeout: (){
-          throw new Exception('Action took so long. Check your internet connection and try again');
-        });
+    await http.get(Uri.parse(url)).timeout(
+        Duration(seconds: 30), onTimeout: () {
+      throw new Exception(
+          'Action took so long. Check your internet connection and try again');
+    });
     if (response.statusCode != 200) {
       throw new Exception('Error fetching Non-structured Points');
     }
@@ -38,9 +39,11 @@ class _CpdTabLayoutState extends State<CpdTabLayout> {
     String url = Constants.baseUrl + 'users/structuredpoints/$s/$year';
     print(url);
     var response =
-        await http.get(Uri.parse(url)).timeout(Duration(seconds: 30), onTimeout: (){
-          throw new Exception('Action took so long. Check your internet connection and try again');
-        });
+    await http.get(Uri.parse(url)).timeout(
+        Duration(seconds: 30), onTimeout: () {
+      throw new Exception(
+          'Action took so long. Check your internet connection and try again');
+    });
     if (response.statusCode != 200) {
       throw new Exception('Error fetching Structured Points');
     }
@@ -55,7 +58,9 @@ class _CpdTabLayoutState extends State<CpdTabLayout> {
 
   @override
   void initState() {
-    int currentYear = DateTime.now().year;
+    int currentYear = DateTime
+        .now()
+        .year;
     for (var i = 0; i < 20; i++) {
       yearsInDroDown.add(currentYear - i);
     }
@@ -83,11 +88,17 @@ class _CpdTabLayoutState extends State<CpdTabLayout> {
             title: Text('CPD Points History'),
           ),
           body: Container(
-            height: MediaQuery.of(context).size.height,
+            height: MediaQuery
+                .of(context)
+                .size
+                .height,
             child: Column(
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
                   padding: EdgeInsets.symmetric(horizontal: 4),
                   child: DropdownButton(
                     hint: Text('Select Year'),
@@ -114,10 +125,10 @@ class _CpdTabLayoutState extends State<CpdTabLayout> {
                         child: FutureBuilder(
                           future: fetchStructuredPoints(yearToSearch),
                           builder: (context, snapshot) {
-                            if(snapshot.connectionState == ConnectionState.waiting){
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return Center(child: CircularProgressIndicator());
-                            }else
-                            if (snapshot.hasData) {
+                            } else if (snapshot.hasData) {
                               incidents = snapshot.data;
                               bool hasData = incidents.length > 0;
                               if (!hasData) {
@@ -127,24 +138,64 @@ class _CpdTabLayoutState extends State<CpdTabLayout> {
                                   height: 200.0,
                                 );
                               }
-                              List<String> titleColumn =["Event Name", "Event Ref","Hours", "Date", "Points"];
-                            return  StickyHeadersTable(
+                              List<String> titleColumn = [
+                                "Event Name",
+                                "Event Ref",
+                                "Hours",
+                                "Date",
+                                "Points"
+                              ];
+
+                              int totalPoints = 0;
+                              return StickyHeadersTable(
                                 columnsLength: titleColumn.length,
-                                rowsLength: incidents.length,
-                                columnsTitleBuilder: (i) => Text(titleColumn[i]),
-                                rowsTitleBuilder: (i) => Text("${(i + 1)}"),
-                                contentCellBuilder: (i, j){
-                                  CpdPointStructured  cpdPointStructured =  CpdPointStructured.fromJson(incidents[j]);
-                                  if(i == 0){
-                                    return Text("${cpdPointStructured.COMMENTS}");
-                                  }else if (i == 1){
-                                    return Text("${cpdPointStructured.REF}");
-                                  }else if (j == 2){
-                                    return Text("${cpdPointStructured.HOURS}");
-                                  }else if (j == 3){
-                                    return Text("${cpdPointStructured.DATE}");
-                                  }else{
-                                    return Text("${cpdPointStructured.CREDITS}");
+                                rowsLength: incidents.length + 1,
+                                columnsTitleBuilder: (i) =>
+                                    Text(titleColumn[i]),
+                                rowsTitleBuilder: (i) {
+                                  if(i == incidents.length){
+                                    return Text("Total");
+                                  }
+                                  return Text("${(i + 1)}");
+                                },
+                                contentCellBuilder: (i, j) {
+                                  if (j == incidents.length) {
+                                    if (i == 0) {
+                                      return Text("-");
+                                    } else if (i == 1) {
+                                      return Text("-");
+                                    } else if (i == 2) {
+                                      return Text("-");
+                                    } else if (i == 3) {
+                                      return Text("-");
+                                    } else {
+                                      return Text("$totalPoints", style: TextStyle(fontWeight: FontWeight.bold),);
+                                    }
+                                  } else {
+                                    CpdPointStructured cpdPointStructured = CpdPointStructured
+                                        .fromJson(incidents[j]);
+                                    if (i == 0) {
+                                      return Text(
+                                          "${cpdPointStructured.COMMENTS}");
+                                    } else if (i == 1) {
+                                      return Text("${cpdPointStructured.REF}");
+                                    } else if (i== 2) {
+                                      return Text(
+                                          "${cpdPointStructured.HOURS}");
+                                    } else if (i == 3) {
+                                      return Text("${cpdPointStructured.DATE}");
+                                    } else {
+                                      var points = cpdPointStructured.CREDITS;
+                                      if(points != null){
+                                        try{
+                                          int pp = int.parse(points);
+                                          totalPoints += pp;
+                                        }catch(e){
+
+                                        }
+                                      }
+                                      return Text("${cpdPointStructured.CREDITS}");
+                                    }
                                   }
                                 },
                                 legendCell: Text('#'),
@@ -209,8 +260,8 @@ class _CpdTabLayoutState extends State<CpdTabLayout> {
 
   List<Widget> _getTitleWidget() {
     return [
-      _getTitleItemWidget("#",30),
-      _getTitleItemWidget("Event Name",200),
+      _getTitleItemWidget("#", 30),
+      _getTitleItemWidget("Event Name", 200),
       _getTitleItemWidget('Date', 100),
       _getTitleItemWidget('Host', 100),
       _getTitleItemWidget('Location', 100),
@@ -239,8 +290,7 @@ class _CpdTabLayoutState extends State<CpdTabLayout> {
   }
 
   Widget _generateRightHandSideColumnRow(BuildContext context, int index) {
-
-    CpdPointStructured  cpdPointStructured =  CpdPointStructured.fromJson(
+    CpdPointStructured cpdPointStructured = CpdPointStructured.fromJson(
         incidents[index]);
 
     return Row(
