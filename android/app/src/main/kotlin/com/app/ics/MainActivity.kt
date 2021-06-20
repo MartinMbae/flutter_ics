@@ -1,4 +1,4 @@
-package com.example.flutter_ics
+package com.app.ics
 
 import io.flutter.embedding.android.FlutterActivity
 
