@@ -6,6 +6,7 @@ import 'package:async/async.dart';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_awesome_alert_box/flutter_awesome_alert_box.dart';
@@ -20,6 +21,7 @@ import 'package:image_picker_widget/enum/image_picker_widget_shape.dart';
 import 'package:image_picker_widget/image_picker_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -869,9 +871,58 @@ class _SignUpPageState extends State<SignUpPage> {
                           decoration: TextDecoration.underline)),
                 ),
               ],
-            )
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            privacyPolicyLinkAndTermsOfService()
           ],
         ),
+      ),
+    );
+  }
+
+  Widget privacyPolicyLinkAndTermsOfService() {
+    return Container(
+      alignment: Alignment.center,
+      padding: EdgeInsets.all(10),
+      child: Center(
+          child: Text.rich(
+              TextSpan(
+                  text: 'By signing up, you agree to our ', style: TextStyle(
+                  fontSize: 14, color: Colors.black
+              ),
+                  children: <TextSpan>[
+                    TextSpan(
+                        text: 'Terms of Service', style: TextStyle(
+                      fontSize: 14, color: Colors.black,
+                      decoration: TextDecoration.underline,
+                    ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () async {
+                            await canLaunch(Constants.termsAndConditionLink) ? await launch(Constants.termsAndConditionLink) : throw 'Could not launch ${Constants.termsAndConditionLink}';
+                          }
+                    ),
+                    TextSpan(
+                        text: ' and ', style: TextStyle(
+                        fontSize: 14, color: Colors.black
+                    ),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: 'Privacy Policy', style: TextStyle(
+                              fontSize: 14, color: Colors.black,
+                              decoration: TextDecoration.underline
+                          ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () async{
+                                  await canLaunch(Constants.privacyPolicyLink) ? await launch(Constants.privacyPolicyLink) : throw 'Could not launch ${Constants.privacyPolicyLink}';
+                                }
+                          )
+                        ]
+                    )
+                  ]
+              )
+          )
       ),
     );
   }
